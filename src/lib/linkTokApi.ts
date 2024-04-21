@@ -296,11 +296,12 @@ export const linkTokApi = createApi({
             created_at: string;
             updated_at: string;
           };
+          mediaUrl:string;
           reason: string;
         }>;
       }, number>({
         query: () => ({
-          url: "getreports", 
+          url: "admin/getreports", 
           method: "GET",
         }),
       }),
@@ -308,7 +309,7 @@ export const linkTokApi = createApi({
      
       deleteReport: builder.mutation<void, number>({
         query: (reportId) => ({
-          url: `/api/admin/deletereport`,
+          url: `/admin/deletereport`,
           method: 'POST',
           body: { report_id: reportId },
         }),
@@ -317,7 +318,7 @@ export const linkTokApi = createApi({
 
       getBlockedUsers: builder.query<{ blockedUsers: Array<{ id: number; username: string; email: string; profilePicture: string; userBio: string | null; isActive: number; isAdmin: number; isblocked: number; remember_token: string | null; created_at: string; updated_at: string; profilePictureUrl: string; }> }, void>({
         query: () => ({
-          url: '/api/admin/getblockedusers',
+          url: '/admin/getblockedusers',
           method: 'GET',
         }),
       }),
@@ -326,7 +327,7 @@ export const linkTokApi = createApi({
 
       blockUser: builder.mutation<{ message: string }, number>({
         query: (userId) => ({
-          url: '/api/admin/blockuser',
+          url: '/admin/blockuser',
           method: 'POST',
           body: { user_id: userId },
         }),
@@ -336,7 +337,7 @@ export const linkTokApi = createApi({
 
 unblockUser: builder.mutation<{ message: string }, number>({
   query: (userId) => ({
-    url: '/api/admin/unblockuser',
+    url: '/admin/unblockuser',
     method: 'POST',
     body: { user_id: userId },
     
@@ -347,7 +348,7 @@ unblockUser: builder.mutation<{ message: string }, number>({
 
 getActiveUsers: builder.query<{ activeUsers: Array<{ id: number; username: string; email: string; password: string; profilePicture: string; userBio: string | null; isActive: number; isAdmin: number; isblocked: number; remember_token: string | null; created_at: string; updated_at: string; profilePictureUrl: string; }> }, void>({
   query: () => ({
-    url: '/api/admin/getactiveusers',
+    url: '/admin/getactiveusers',
     method: 'GET',
     
   }),
@@ -357,11 +358,22 @@ getActiveUsers: builder.query<{ activeUsers: Array<{ id: number; username: strin
 
 getInactiveUsers: builder.query<{ inactiveUsers: Array<{ id: number; username: string; email: string; password: string; profilePicture: string; userBio: string | null; isActive: number; isAdmin: number; isblocked: number; remember_token: string | null; created_at: string; updated_at: string; profilePictureUrl: string; }> }, void>({
   query: () => ({
-    url: '/api/admin/getinactiveusers',
+    url: '/admin/getinactiveusers',
     method: 'GET',
     
   }),
 }),
+
+
+
+getForYouVideos: builder.query<{ posts: Array<{ id:number, mediaUrl: string }> }, void>({
+  query: () => ({
+    url: '/getforyouvideos',
+    method: 'GET',
+  }),
+  transformResponse: (response: { post: any }) => ({ posts: [response.post] }),
+}),
+
 
 
   }),
@@ -385,8 +397,16 @@ export const {
   useUpdatedetailsMutation,
   useViewfollowingpostQuery,
   useLikepostMutation,
-
   useCreatecommentMutation,
-useViewcommentsQuery,
+  useViewcommentsQuery,
+  useGetRepostsQuery,
+  useDeleteReportMutation,
+  useBlockUserMutation,
+  useUnblockUserMutation,
+
+  useGetActiveUsersQuery,
+  useGetInactiveUsersQuery,
+  useGetBlockedUsersQuery,
+  useGetForYouVideosQuery,
 
 } = linkTokApi;

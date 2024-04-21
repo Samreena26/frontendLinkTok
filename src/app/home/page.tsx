@@ -23,6 +23,7 @@ import {
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
+import Loader from "@/ui/Loader";
 
 interface CreatePostResponse {
   message: string;
@@ -42,7 +43,7 @@ export default function Page() {
 
 
   const [createPost, { isSuccess }] = useCreatePostMutation();
-  const { data, isError, isLoading, refetch } = useGetuserpostsQuery();
+  const { data, isLoading, refetch } = useGetuserpostsQuery();
   const { data: commentsData, refetch: commentsFetch } = useViewcommentsQuery(
     post_id || 0
   );
@@ -185,7 +186,7 @@ export default function Page() {
   }, [isSuccess, refetch]);
 
   
-
+ 
   return (
     <>
       <div className="container mx-auto p-4">
@@ -224,7 +225,9 @@ export default function Page() {
       </div>
 
       <div className="container mx-auto p-4">
+    
         <h1 className="text-2xl font-bold text-center mb-6">Your Posts</h1>
+        {isLoading && <Loader />}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data?.posts
             .slice()

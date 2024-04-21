@@ -4,16 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { useGetusersearchQuery, useSendRequestMutation, useUnfollowMutation ,useGetFollowingQuery,useGetFollowersQuery} from '@/lib/linkTokApi';
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
+import Loader from '@/components/ui/Loader';
 
 export default function Page() {
   const { toast } = useToast();
   const [searchText, setSearchText] = useState('');
   const [debouncedSearchText, setDebouncedSearchText] = useState(searchText);
-  const { data, isLoading, isError } = useGetusersearchQuery(debouncedSearchText);
+  const { data, isLoading:seachloading, isError } = useGetusersearchQuery(debouncedSearchText);
   const [sendRequest] = useSendRequestMutation();
   const [unfollow] = useUnfollowMutation();
-  const {data: followingData,refetch: refetchFollowing}=useGetFollowingQuery();
-  const {data: followData,refetch: refetchFollow}=useGetFollowersQuery();
+  const {data: followingData,isLoading:followingsloading, refetch: refetchFollowing}=useGetFollowingQuery();
+  const {data: followData,isLoading:followersloading, refetch: refetchFollow}=useGetFollowersQuery();
 
   const [followStatus, setFollowStatus] = useState({});
 
@@ -100,6 +101,8 @@ export default function Page() {
             className="w-full md:w-3/4 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {/* User cards */}
+         <div>
+          
           {data?.search.map((result) => (
             <div key={result.id} className="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
               <img src={result.profilePictureUrl} alt={result.username} className="h-16 w-16 rounded-full" />
@@ -126,11 +129,13 @@ export default function Page() {
             </div>
           ))}
         </div>
+        </div>
         {/* Right column for following data */}
         <div className="col-span-1 md:col-span-1 space-y-4">
           {/* Following list */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Following</h3>
+            {followingsloading && <Loader/>}
             {followingData?.following.map((result) => (
               <div key={result.target_id} className="flex items-center space-x-4">
                 <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full" />
@@ -143,6 +148,7 @@ export default function Page() {
           {/* Followers list */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Followers</h3>
+            {followersloading && <Loader/>}
             {followData?.followers.map((result) => (
               <div key={result.user_id} className="flex items-center space-x-4">
                 <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full" />

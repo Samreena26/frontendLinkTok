@@ -24,6 +24,7 @@ import { Input } from "@/ui/input";
 
 
 import { Heart, MessageCircle, Share2 } from "lucide-react";
+import Loader from "@/ui/Loader";
 
 export default function page() {
   const { toast } = useToast();
@@ -39,7 +40,9 @@ export default function page() {
   const { data: commentsData, refetch: commentsFetch } = useViewcommentsQuery(
     post_id || 0
   );
-  const { data } = useViewfollowingpostQuery();
+  const { data,isError,isLoading } = useViewfollowingpostQuery();
+  
+  if(isError)return <div>you are not follwoing anyone</div>;
   console.log(data);
 
   const [likepost] = useLikepostMutation();
@@ -119,6 +122,7 @@ export default function page() {
   return (
     <>
       <div className="w-screen h-screen ">
+      {isLoading && <Loader />}
         {data?.followingPost.map((post: any) => (
           <div key={post.post_id}>
             <div className="flex  space-x-4 p-4">
