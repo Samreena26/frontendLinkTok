@@ -4,14 +4,30 @@
 import { useGetBlockedUsersQuery,useUnblockUserMutation } from '@/lib/linkTokApi';
 import Loader from '@/components/ui/Loader'
 export default function page() {
-  const { data: blockusersData, isLoading, error } = useGetBlockedUsersQuery();
+  const { data: blockusersData, isLoading, error,refetch } = useGetBlockedUsersQuery();
 const [unblockUser]=useUnblockUserMutation();
   if (isLoading) return <Loader />;
   if (error) return <div>Error fetching active users.</div>;
 
+
+const handleUnblockUser = async(userid:number) => {
+try{
+  await unblockUser(userid).unwrap();
+  refetch()
+}catch (err) {
+  console.error('Failed to block report or delete report:', err);
+}
+  
+
+}
+
+
+
+
+
   return (
     <div>
-      <h1 className="text-2xl font-bold">Active Users</h1>
+      <h1 className="text-2xl font-bold">blockusers Users</h1>
       {blockusersData && blockusersData.blockedUsers.length > 0 ? (
         <ul>
           {blockusersData.blockedUsers.map((user) => (
@@ -32,7 +48,7 @@ const [unblockUser]=useUnblockUserMutation();
               <div>
              <button
                className="bg-blue-500 text-white px-3 py-1 rounded ml-2"
-               onClick={() => unblockUser(user.id)}
+               onClick={() => handleUnblockUser(user.id)}
              >
                unBlock User
              </button>

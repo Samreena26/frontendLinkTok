@@ -25,7 +25,7 @@ interface FormState {
   media: File | null;
 }
 
-export default function Page() {
+export default function page() {
   const { toast } = useToast();
   const { data, isError, isLoading, refetch } = useGetUserDetailQuery();
   const [updatedetails, { isSuccess }] = useUpdatedetailsMutation();

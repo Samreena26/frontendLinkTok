@@ -2,7 +2,7 @@
 
 import {useGetRepostsQuery,
     useDeleteReportMutation,
-    useBlockUserMutation,} from '@/lib/linkTokApi'
+    useBlockUserMutation,useBlockpostMutation} from '@/lib/linkTokApi'
     import { Button } from "@/ui/button";
     import {
         Dialog,
@@ -20,6 +20,7 @@ import Loader from '@/ui/Loader';
 
 export default function page(){
     const { data, isLoading, error ,refetch } = useGetRepostsQuery();
+    const [blockpost]=useBlockpostMutation();
   const [deleteReport] = useDeleteReportMutation();
   const [blockUser] = useBlockUserMutation();
 
@@ -42,7 +43,18 @@ export default function page(){
   const handleBlockUser = async (userId: number, reportId: number) => {
     try {
       await blockUser(userId).unwrap();
-      await handleDelete(reportId); // Call handleDelete to delete the report and refetch
+      await deleteReport(reportId).unwrap();
+      refetch();
+    } catch (err) {
+      console.error('Failed to block user or delete report:', err);
+    }
+  };
+
+  const handleBlockPost = async (reportId: number,post_id:number,reportedForId:number) => {
+    try {
+      await blockpost(post_id).unwrap();
+      await deleteReport(reportId).unwrap();
+      refetch();
     } catch (err) {
       console.error('Failed to block user or delete report:', err);
     }
@@ -77,6 +89,12 @@ export default function page(){
                     onClick={() => handleBlockUser(report.reportedForId, report.reportId)}
                   >
                     Block User
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-3 py-1 rounded ml-2"
+                    onClick={() => handleBlockPost(report.post.id,report.reportId,report.reportedForId)}
+                  >
+                    Block post
                   </button>
                 </div>
                 <Dialog >

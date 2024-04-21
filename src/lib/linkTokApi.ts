@@ -344,6 +344,15 @@ unblockUser: builder.mutation<{ message: string }, number>({
   }),
 }),
 
+blockpost: builder.mutation<{ message: string }, number>({
+  query: (post_id) => ({
+    url: '/admin/blockpost',
+    method: 'POST',
+    body: { post_id: post_id },
+  }),
+}),
+
+
 // Add this inside your reportApi.ts or equivalent file where you define your API endpoints
 
 getActiveUsers: builder.query<{ activeUsers: Array<{ id: number; username: string; email: string; password: string; profilePicture: string; userBio: string | null; isActive: number; isAdmin: number; isblocked: number; remember_token: string | null; created_at: string; updated_at: string; profilePictureUrl: string; }> }, void>({
@@ -402,6 +411,7 @@ export const {
   useGetRepostsQuery,
   useDeleteReportMutation,
   useBlockUserMutation,
+  useBlockpostMutation,
   useUnblockUserMutation,
 
   useGetActiveUsersQuery,
