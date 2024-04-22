@@ -353,7 +353,24 @@ blockpost: builder.mutation<{ message: string }, number>({
 }),
 
 
-// Add this inside your reportApi.ts or equivalent file where you define your API endpoints
+Share: builder.mutation<{ message: string }, {user_id:number,post_id:number}>({
+  query: (post_id) => ({
+    url: '/share',
+    method: 'POST',
+    body: {post_id},
+  }),
+}),
+
+
+
+createimpression: builder.mutation<{ message: string }, {post_id:number}>({
+  query: (post_id) => ({
+    url: '/createimpression',
+    method: 'POST',
+    body: {post_id},
+  }),
+}),
+
 
 getActiveUsers: builder.query<{ activeUsers: Array<{ id: number; username: string; email: string; password: string; profilePicture: string; userBio: string | null; isActive: number; isAdmin: number; isblocked: number; remember_token: string | null; created_at: string; updated_at: string; profilePictureUrl: string; }> }, void>({
   query: () => ({
@@ -375,12 +392,58 @@ getInactiveUsers: builder.query<{ inactiveUsers: Array<{ id: number; username: s
 
 
 
-getForYouVideos: builder.query<{ posts: Array<{ id:number, mediaUrl: string }> }, void>({
+getForYouVideos: builder.query<{ posts: Array<{ id: number, mediaUrl: string }> }, void>({
   query: () => ({
     url: '/getforyouvideos',
     method: 'GET',
   }),
-  transformResponse: (response: { post: any }) => ({ posts: [response.post] }),
+  transformResponse: (response: { posts: any }) => response, // Assuming the API returns an object with a 'posts' array
+}),
+
+
+
+getPost: builder.query({
+  query: (post_id) => `getpost?post_id=${encodeURIComponent(post_id)}`,
+  transformResponse: (response: { post: any }, meta, arg) => {
+    // You can perform any transformation here if needed
+    return response.post;
+  },
+
+}),
+
+
+// getAllLikes
+// getallcomments
+// getallshares
+// getallimpressions
+getAllLikes: builder.query<{ "totalLikes":number}, void>({
+  query: () => ({
+    url: "getAllLikes",
+    method: "GET",
+  }),
+}),
+
+getallcomments: builder.query<{totalComments:number}, void>({
+  query: () => ({
+    url: "getallcomments",
+    method: "GET",
+  }),
+}),
+
+
+getallshares: builder.query<{totalShares:number}, void>({
+  query: () => ({
+    url: "getallshares",
+    method: "GET",
+  }),
+}),
+
+
+getallimpressions: builder.query<{totalImpressions:number}, void>({
+  query: () => ({
+    url: "getallimpressions",
+    method: "GET",
+  }),
 }),
 
 
@@ -413,6 +476,14 @@ export const {
   useBlockUserMutation,
   useBlockpostMutation,
   useUnblockUserMutation,
+
+//remaing hooks
+useCreateimpressionMutation,
+useGetAllLikesQuery,
+useGetallcommentsQuery,
+useGetallsharesQuery,
+useGetallimpressionsQuery,
+
 
   useGetActiveUsersQuery,
   useGetInactiveUsersQuery,

@@ -16,6 +16,7 @@ import {
   useLikepostMutation,
   useCreatecommentMutation,
   useViewcommentsQuery,
+  useCreateimpressionMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -41,7 +42,9 @@ export default function page() {
     post_id || 0
   );
   const { data,isError,isLoading } = useViewfollowingpostQuery();
-  
+  console.log(data);
+  const[createimpression]=useCreateimpressionMutation();
+
   if(isError)return <div>you are not follwoing anyone</div>;
   console.log(data);
 
@@ -134,11 +137,25 @@ export default function page() {
               <h3 className="text-xl font-bold">{post.username}</h3>
             </div>
             <div>
-              <img
-                src={post.mediaURL}
-                alt={`Post by ${post.username}`}
-                className="h-50 w-50 mt-2"
-              />
+            {post.postType === 'photo' ? (
+      // Display image if it's a photo
+      <img
+        className="h-48 w-full object-contain rounded-t-lg"
+        src={post.mediaURL}
+        alt="Post Media"
+      />
+    ) : (
+      // Display video if it's a video
+      <video
+        className="h-48 w-full object-contain rounded-t-lg"
+        controls
+        muted
+        loop
+      >
+        <source src={post.mediaURL} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    )}
             </div>
             <div className="space-x-4">
               <Button onClick={() => handleLike(post.post_id)}>

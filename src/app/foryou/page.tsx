@@ -1,14 +1,17 @@
 'use client'
 import React, { useEffect, useRef, useState} from 'react';
-import { useGetForYouVideosQuery, useLikepostMutation } from '@/lib/linkTokApi';
+import { useGetForYouVideosQuery, useLikepostMutation,useCreateimpressionMutation } from '@/lib/linkTokApi';
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 
 import { Heart } from "lucide-react";
+import Loader from '@/ui/Loader';
 
 export default function Page() {
   const { data, error, isLoading } = useGetForYouVideosQuery();
+  console.log(data);
   const [likePost] = useLikepostMutation();
+  const[createimpression]=useCreateimpressionMutation();
   const { toast } = useToast();
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
   const videoRefs = useRef<HTMLVideoElement[]>([]);
@@ -59,7 +62,7 @@ export default function Page() {
     });
   }, [activeVideo]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader/>;
   if (error) return <div>Error occurred</div>;
 
   return (
@@ -68,16 +71,16 @@ export default function Page() {
       {data?.posts.map((post, index) => (
         <div key={post.id} className="flex justify-center items-center my-4">
           <div className="relative">
-            <video
-            ref={(el: HTMLVideoElement | null) => {
-                if (el) videoRefs.current[index] = el;
-              }}
-              src={post.mediaUrl}
-              className="w-full md:w-52 lg:w-72 mx-auto"
-              controls
-              muted
-              loop
-            />
+          <video
+            ref={(el) => {
+              if (el) videoRefs.current[index] = el;
+            }}
+            src={post.mediaUrl}
+            className="w-full md:w-52 lg:w-72 mx-auto"
+            controls
+            muted
+            loop
+          />
             <button
               onClick={() => handleLike(post.id)}
               className="absolute right-2 top-2 text-red-500"
@@ -89,4 +92,9 @@ export default function Page() {
       ))}
     </>
   );
+
+
+
+
+  // src={post.mediaUrl}
 }

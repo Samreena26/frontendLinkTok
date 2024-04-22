@@ -19,6 +19,7 @@ import {
   useLikepostMutation,
   useCreatecommentMutation,
   useViewcommentsQuery,
+  useCreateimpressionMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -44,13 +45,14 @@ export default function Page() {
 
   const [createPost, { isSuccess }] = useCreatePostMutation();
   const { data, isLoading, refetch } = useGetuserpostsQuery();
+  console.log(data); 
   const { data: commentsData, refetch: commentsFetch } = useViewcommentsQuery(
     post_id || 0
   );
 
   const [likepost] = useLikepostMutation();
   const [createcomment] = useCreatecommentMutation();
-
+const[createimpression]=useCreateimpressionMutation();
 
 
 
@@ -237,11 +239,25 @@ export default function Page() {
                 key={post.id}
                 className="bg-white shadow rounded-lg p-4"
               >
-                <img
-                  className="h-48 w-full object-contain rounded-t-lg"
-                  src={post.mediaUrl}
-                  alt="Post Media"
-                />
+               {post.postType === 'photo' ? (
+      // Display image if it's a photo
+      <img
+        className="h-48 w-full object-contain rounded-t-lg"
+        src={post.mediaUrl}
+        alt="Post Media"
+      />
+    ) : (
+      // Display video if it's a video
+      <video
+        className="h-48 w-full object-contain rounded-t-lg"
+        controls
+        muted
+        loop
+      >
+        <source src={post.mediaUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    )}
 
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
