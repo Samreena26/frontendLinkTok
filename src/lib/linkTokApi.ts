@@ -353,7 +353,7 @@ blockpost: builder.mutation<{ message: string }, number>({
 }),
 
 
-Share: builder.mutation<{ message: string }, {user_id:number,post_id:number}>({
+Share: builder.mutation<{ message: string }, number>({
   query: (post_id) => ({
     url: '/share',
     method: 'POST',
@@ -476,7 +476,8 @@ export const {
   useBlockUserMutation,
   useBlockpostMutation,
   useUnblockUserMutation,
-
+useGetPostQuery,
+useShareMutation,
 //remaing hooks
 useCreateimpressionMutation,
 useGetAllLikesQuery,

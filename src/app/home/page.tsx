@@ -14,12 +14,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/ui/popover"
+
+import {
   useCreatePostMutation,
   useGetuserpostsQuery,
   useLikepostMutation,
   useCreatecommentMutation,
   useViewcommentsQuery,
   useCreateimpressionMutation,
+  useShareMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -49,6 +56,8 @@ export default function Page() {
   const { data: commentsData, refetch: commentsFetch } = useViewcommentsQuery(
     post_id || 0
   );
+  const [sharePost, { isLoading: isSharing }] = useShareMutation();
+
 
   const [likepost] = useLikepostMutation();
   const [createcomment] = useCreatecommentMutation();
@@ -180,6 +189,19 @@ const[createimpression]=useCreateimpressionMutation();
       commentsFetch();
     }
   };
+
+
+
+  const handleShare = async ( post_id:number) => {
+    try {
+      const shareData = await sharePost(post_id).unwrap();
+console.log(shareData);
+      // Handle successful share
+    } catch (error) {
+      // Handle error
+    }
+  };
+  
 
   useEffect(() => {
     if (isSuccess) {
@@ -344,10 +366,25 @@ const[createimpression]=useCreateimpressionMutation();
 
 
 
-                  <Button>
-                    <Share2 className="mr-2" />
-                    share
-                  </Button>
+<Popover >
+  <PopoverTrigger asChild>
+    <Button variant="outline" onClick={() => handleShare(post.id)}>share</Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-80">
+    <div className="grid gap-4 p-4">
+      <div className="space-y-2">
+        <h4 className="font-medium leading-none">Share</h4>
+        <input
+          type="text"
+          readOnly
+          value={`http://localhost:3000/getpost?post_id=${post.id}`} // Replace `post.id` with the actual post ID variable
+          className="w-full text-sm border-gray-300 rounded-md"
+        />
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>
+
                 </div>
 
 

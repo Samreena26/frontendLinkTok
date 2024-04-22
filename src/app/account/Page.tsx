@@ -1,6 +1,9 @@
 'use client'
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { useGetUserDetailQuery, useUpdatedetailsMutation } from "@/lib/linkTokApi";
+import { useGetUserDetailQuery, useUpdatedetailsMutation,useGetAllLikesQuery,
+  useGetallcommentsQuery,
+  useGetallsharesQuery,
+  useGetallimpressionsQuery,} from "@/lib/linkTokApi";
 import { Button } from "@/ui/button";
 import {
   Dialog,
@@ -15,6 +18,7 @@ import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
+import Loader from "@/ui/Loader";
 
 interface updatedetailsResponse {
   message: string;
@@ -66,13 +70,26 @@ export default function page() {
     }
   };
 
+
+  const {data:allLikes ,refetch:refetchlikes}=useGetAllLikesQuery();
+  const {data:allComments,refetch:refetchComments}=useGetallcommentsQuery();
+const {data:allShares,refetch:refetchShares}=useGetallsharesQuery();
+const {data:allImpressions,refetch:refetchImpressions}=useGetallimpressionsQuery();
+
+
+
   useEffect(() => {
     if (isSuccess) {
       refetch();
     }
+    refetchlikes();
+    refetchComments();
+    refetchShares();
+    refetchImpressions();
+
   }, [isSuccess, refetch]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader/>;
   if (isError) return <div>Error occurred</div>;
 
   return (
@@ -123,15 +140,19 @@ export default function page() {
         {/* Replace with actual data */}
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Likes</h2>
-          <p className="text-3xl">123</p>
+          <p className="text-3xl">{allLikes?.totalLikes}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Comments</h2>
-          <p className="text-3xl">456</p>
+          <p className="text-3xl">{allComments?.totalComments}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Shares</h2>
-          <p className="text-3xl">789</p>
+          <p className="text-3xl">{allShares?.totalShares}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold">impressions</h2>
+          <p className="text-3xl">{allImpressions?.totalImpressions}</p>
         </div>
       </div>
       <Toaster />
