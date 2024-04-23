@@ -40,6 +40,7 @@ interface CreatePostResponse {
 interface FormState {
   caption: string;
   media: File | null;
+  dateTime: string; // Add dateTime property
 }
 
 
@@ -73,6 +74,7 @@ const[createimpression]=useCreateimpressionMutation();
   const [formData, setFormData] = useState<FormState>({
     caption: "",
     media: null,
+    dateTime: "", // Initialize dateTime property
   });
 
   const handleCaptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +85,14 @@ const[createimpression]=useCreateimpressionMutation();
     if (e.target.files?.[0]) {
       setFormData({ ...formData, media: e.target.files[0] });
     }
+  };
+
+   // Function to handle changes in the date and time picker
+   const handleDateTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      dateTime: e.target.value,
+    });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -99,6 +109,7 @@ const[createimpression]=useCreateimpressionMutation();
     const apiFormData = new FormData();
     apiFormData.append("caption", formData.caption);
     formData.media && apiFormData.append("media", formData.media);
+    apiFormData.append("dateTime", formData.dateTime);
 
     try {
       const response: CreatePostResponse = await createPost(
@@ -238,6 +249,17 @@ console.log(shareData);
               className="w-full p-2 border rounded"
             />
           </div>
+          {/* Date and time picker input */}
+      <div className="mb-4">
+        <label htmlFor="dateTime">Date and Time</label>
+        <input
+          type="datetime-local"
+          id="dateTime"
+          value={formData.dateTime}
+          onChange={handleDateTimeChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
           <Button
             type="submit"
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

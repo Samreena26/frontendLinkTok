@@ -75,7 +75,20 @@ console.log(data);
                <div className="p-4">
                 <h2 className="text-xl font-bold mb-2">{stories.username}</h2>
               </div>
+              {stories.storyType === 'photo' ? (
              <img className="h-48 w-full object-contain rounded-t-lg" src={stories.mediaURL} alt="Post Media" />
+              ) : (
+              // Display video if it's a video
+              <video
+                className="h-48 w-full object-contain rounded-t-lg"
+                controls
+                muted
+                loop
+              >
+                <source src={stories.mediaURL} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
 
              
             </div>

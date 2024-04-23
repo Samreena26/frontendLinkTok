@@ -71,6 +71,7 @@ interface getusersStroyResponse {
       username: string;
       story_id: number;
       mediaURL: string;
+      storyType: string;
     }
   ];
 }
@@ -219,6 +220,7 @@ export const linkTokApi = createApi({
             username: string;
             profile_picture: string;
             post_id: number;
+            postType:string;
             mediaURL: string;
             profilePictureUrl: string;
             like_count: number;
