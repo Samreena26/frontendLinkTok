@@ -17,6 +17,8 @@ import {
   useCreatecommentMutation,
   useViewcommentsQuery,
   useCreateimpressionMutation,
+  useCreateviewMutation,
+  
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -25,6 +27,7 @@ import { Input } from "@/ui/input";
 
 
 import { Heart, MessageCircle, Share2 } from "lucide-react";
+
 import Loader from "@/ui/Loader";
 
 export default function page() {
@@ -35,7 +38,7 @@ export default function page() {
   const [commentText, setcommentText] = useState("");
 
   const [createcomment] = useCreatecommentMutation();
-
+  const[createview]=useCreateviewMutation();
   const [post_id, setpost_id] = useState<number>(0); // State to store the post_id
 
   const { data: commentsData, refetch: commentsFetch } = useViewcommentsQuery(
@@ -44,6 +47,10 @@ export default function page() {
   const { data,isError,isLoading } = useViewfollowingpostQuery();
   console.log(data);
   const[createimpression]=useCreateimpressionMutation();
+
+
+
+
 
   if(isError)return <div>you are not follwoing anyone</div>;
   console.log(data);
@@ -141,6 +148,7 @@ export default function page() {
       // Display image if it's a photo
       <img
         className="h-48 w-full object-contain rounded-t-lg"
+        onMouseEnter={()=>{createimpression(post.post_id)}}
         src={post.mediaURL}
         alt="Post Media"
       />
@@ -148,6 +156,8 @@ export default function page() {
       // Display video if it's a video
       <video
         className="h-48 w-full object-contain rounded-t-lg"
+        onCanPlay={()=>{createimpression(post.post_id)}}
+        onPlay={() => createview(post.id)}
         controls
         muted
         loop
@@ -173,8 +183,8 @@ export default function page() {
 
 <Dialog >
   <DialogTrigger asChild>
-    <Button variant="outline" onClick={() => handleComment(post.post_id)}>
-      {post.comments} comments
+    <Button variant="default" onClick={() => handleComment(post.post_id)}>
+      {post.comments}  <MessageCircle className="mr-2 ml-2" /> comments
     </Button>
   </DialogTrigger>
 

@@ -154,6 +154,24 @@ export const linkTokApi = createApi({
         body: credentials,
       }),
     }),
+    
+    updatePost: builder.mutation<{ message: string }, { post_id: number, formData: FormData }>({
+      query: (credentials) => ({
+        url: "updatepost",
+        method: "POST",
+        body: credentials.formData, // Send formData directly as the body
+        params: { post_id: credentials.post_id }, // Include post_id as a parameter
+      }),
+    }),
+
+    deleltePost:builder.mutation<{message:string},{post_id:number}>({
+      query: (credentials) => ({
+        url: "deletepost",
+        method: "Post",
+        body: credentials,
+      }),
+    }),
+    
     getuserposts: builder.query<getuserpostsResponse, void>({
       query: () => ({
         url: "getuserposts",
@@ -365,9 +383,17 @@ Share: builder.mutation<{ message: string }, number>({
 
 
 
-createimpression: builder.mutation<{ message: string }, {post_id:number}>({
+createimpression: builder.mutation<{ message: string }, number>({
   query: (post_id) => ({
     url: '/createimpression',
+    method: 'POST',
+    body: {post_id},
+  }),
+}),
+
+createview: builder.mutation<{ message: string }, number>({
+  query: (post_id) => ({
+    url: '/createview',
     method: 'POST',
     body: {post_id},
   }),
@@ -449,6 +475,13 @@ getallimpressions: builder.query<{totalImpressions:number}, void>({
 }),
 
 
+getallviews: builder.query<{totalViews:number}, void>({
+  query: () => ({
+    url: "getallviews",
+    method: "GET",
+  }),
+}),
+
 
   }),
 });
@@ -460,6 +493,8 @@ export const {
   useSigninUserMutation,
   useGetUserDetailQuery,
   useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeleltePostMutation,
   useGetuserpostsQuery,
   useCreateStoryMutation,
   useGetuserstoryQuery,
@@ -482,11 +517,12 @@ useGetPostQuery,
 useShareMutation,
 //remaing hooks
 useCreateimpressionMutation,
+useCreateviewMutation,
 useGetAllLikesQuery,
 useGetallcommentsQuery,
 useGetallsharesQuery,
 useGetallimpressionsQuery,
-
+useGetallviewsQuery,
 
   useGetActiveUsersQuery,
   useGetInactiveUsersQuery,

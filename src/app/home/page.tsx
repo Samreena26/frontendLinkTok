@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect,useRef } from "react";
 import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
 import { Button } from "@/ui/button";
@@ -27,6 +27,9 @@ import {
   useViewcommentsQuery,
   useCreateimpressionMutation,
   useShareMutation,
+  useUpdatePostMutation,
+  useDeleltePostMutation,
+  useCreateviewMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -63,19 +66,20 @@ export default function Page() {
   const [likepost] = useLikepostMutation();
   const [createcomment] = useCreatecommentMutation();
 const[createimpression]=useCreateimpressionMutation();
+const[updatePost]=useUpdatePostMutation();
+const[deltePost]=useDeleltePostMutation();
+const[createview]=useCreateviewMutation();
+const [commentText, setcommentText] = useState("");
 
-
-
-
- 
-
-  const [commentText, setcommentText] = useState("");
-
-  const [formData, setFormData] = useState<FormState>({
+const [formData, setFormData] = useState<FormState>({
     caption: "",
     media: null,
     dateTime: "", // Initialize dateTime property
-  });
+  }); 
+
+  
+
+  
 
   const handleCaptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, caption: e.target.value });
@@ -130,6 +134,51 @@ const[createimpression]=useCreateimpressionMutation();
       });
     }
   };
+
+
+
+  const handleDeletePost = async (id:number)=>{
+   await deltePost({post_id:id});
+   setTimeout(() => {
+    refetch();
+   }, 3000);
+   
+  }
+
+  const handleUpdate = async (post_id: number) => {
+    const apiFormData = new FormData();
+  
+    // Append caption if available
+    if (formData.caption) {
+      apiFormData.append("caption", formData.caption);
+    }
+  
+    // Append media if available
+    if (formData.media) {
+      apiFormData.append("media", formData.media);
+    }
+  
+    try {
+      const response = await updatePost({ post_id, formData: apiFormData }).unwrap();
+      console.log(response);
+      toast({
+        title: "Success",
+        description: "Post updated",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
+  
+    setTimeout(() => {
+      refetch();
+    }, 3000);
+  }
+  
+  
 
   const handleLike = async (id: number) => {
     try {
@@ -214,6 +263,29 @@ console.log(shareData);
   };
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     if (isSuccess) {
       refetch();
@@ -280,29 +352,101 @@ console.log(shareData);
             .reverse()
             .map((post) => (
               <div
-                key={post.id}
+              key={post.id} id={`post-${post.id}`}
                 className="bg-white shadow rounded-lg p-4"
               >
-               {post.postType === 'photo' ? (
-      // Display image if it's a photo
-      <img
-        className="h-48 w-full object-contain rounded-t-lg"
-        src={post.mediaUrl}
-        alt="Post Media"
-      />
-    ) : (
-      // Display video if it's a video
-      <video
-        className="h-48 w-full object-contain rounded-t-lg"
-        controls
-        muted
-        loop
-      >
-        <source src={post.mediaUrl} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    )}
+                <div>
+                  <div>
+                    
+                  </div>
+                </div>
+                <div className="relative" >
+  {post.postType === 'photo' ? (
+    // Display image if it's a photo
+    <img
+      className="h-48 w-full object-contain rounded-t-lg"
+      onMouseEnter={() => createimpression(post.id)}
+      src={post.mediaUrl}
+      alt="Post Media"
+    />
+  ) : (
+    // Display video if it's a video
+    <video
+      className="h-48 w-full object-contain rounded-t-lg"
+      onCanPlay={() => createimpression(post.id)}
+      onPlay={() => createview(post.id)}
+      controls
+      muted
+      loop
+    >
+      <source src={post.mediaUrl} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  )}
 
+  {/* Three vertical dots in a round white div */}
+  <div className="absolute top-0 right-0 mt-2 ml-2">
+  <Popover>
+    <PopoverTrigger>
+      <div className="rounded-full bg-white p-2 cursor-pointer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 text-gray-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 8a2 2 0 100-4 2 2 0 000 4zm0 2a2 2 0 100 4 2 2 0 000-4zm0 6a2 2 0 100 4 2 2 0 000-4z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+    </PopoverTrigger>
+    <PopoverContent>
+      {/* Popover content */}
+      <div className="p-2 space-x-3">
+        <Dialog>
+          <DialogTrigger>
+            <Button >Update Post</Button>
+          </DialogTrigger>
+          <DialogContent>
+            {/* Content for updating the post */}
+            {/* Add your form fields or content for updating the post here */}
+            {/* For example: */}
+            <div className="mb-4">
+            <Label htmlFor="caption">Caption</Label>
+            <Input
+              type="text"
+              id="caption"
+              value={formData.caption}
+              onChange={handleCaptionChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <Label htmlFor="media">Media</Label>
+            <Input
+              type="file"
+              id="media"
+              onChange={handleMediaChange}
+              accept="image/jpeg,image/png,video/mp4,video/quicktime"
+              className="w-full p-2 border rounded"
+            />
+          </div>
+
+            <DialogFooter>
+              <Button onClick={() => handleUpdate(post.id)}>Update</Button>
+             
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Button onClick={() => handleDeletePost(post.id)}>Delete Post</Button>
+      </div>
+    </PopoverContent>
+  </Popover>
+  </div>
+</div>
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
                   <p className="text-gray-600">Tags: {post.tags}</p>
@@ -318,8 +462,8 @@ console.log(shareData);
                   </Button> */}
 <Dialog >
   <DialogTrigger asChild>
-    <Button variant="outline" onClick={() => handleComment(post.id)}>
-      {post.comments} comments
+    <Button variant="default" onClick={() => handleComment(post.id)}>
+      {post.comments} <MessageCircle className="mr-2 ml-2" /> comments
     </Button>
   </DialogTrigger>
 
@@ -390,12 +534,12 @@ console.log(shareData);
 
 <Popover >
   <PopoverTrigger asChild>
-    <Button variant="outline" onClick={() => handleShare(post.id)}>share</Button>
+    <Button variant="default" onClick={() => handleShare(post.id)}>{post.shares} share</Button>
   </PopoverTrigger>
   <PopoverContent className="w-80">
     <div className="grid gap-4 p-4">
       <div className="space-y-2">
-        <h4 className="font-medium leading-none">Share</h4>
+        <h4 className="font-medium leading-none" >Share</h4>
         <input
           type="text"
           readOnly
@@ -425,4 +569,6 @@ console.log(shareData);
       </div>
     </>
   );
+
+
 }

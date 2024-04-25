@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState} from 'react';
-import { useGetForYouVideosQuery, useLikepostMutation,useCreateimpressionMutation } from '@/lib/linkTokApi';
+import { useInView } from 'react-intersection-observer';
+import { useGetForYouVideosQuery, useLikepostMutation,useCreateimpressionMutation,useCreateviewMutation } from '@/lib/linkTokApi';
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 
@@ -12,10 +13,13 @@ export default function Page() {
   console.log(data);
   const [likePost] = useLikepostMutation();
   const[createimpression]=useCreateimpressionMutation();
-  const { toast } = useToast();
-  const [activeVideo, setActiveVideo] = useState<number | null>(null);
-  const videoRefs = useRef<HTMLVideoElement[]>([]);
+  const[createview]=useCreateviewMutation();
 
+  
+  const { toast } = useToast();
+
+  // Use the useInView hook to monitor each video element
+ 
   const handleLike = async (postId: number) => {
     try {
       const response = await likePost({ post_id: postId }).unwrap();
@@ -32,38 +36,15 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const index = videoRefs.current.indexOf(entry.target as HTMLVideoElement);
-          if (entry.isIntersecting) {
-            setActiveVideo(index);
-          }
-        });
-      },
-      { threshold: 0.75 }
-    );
-
-    videoRefs.current.forEach((video) => observer.observe(video));
-
-    return () => {
-      videoRefs.current.forEach((video) => observer.unobserve(video));
-    };
-  }, []);
-
-  useEffect(() => {
-    videoRefs.current.forEach((video, index) => {
-      if (index === activeVideo) {
-        video.play();
-      } else {
-        video.pause();
-      }
-    });
-  }, [activeVideo]);
-
+  
   if (isLoading) return <Loader/>;
   if (error) return <div>Error occurred</div>;
+
+
+  
+
+
+
 
   return (
     <>
@@ -72,10 +53,9 @@ export default function Page() {
         <div key={post.id} className="flex justify-center items-center my-4">
           <div className="relative">
           <video
-            ref={(el) => {
-              if (el) videoRefs.current[index] = el;
-            }}
             src={post.mediaUrl}
+            onCanPlay={() => createimpression(post.id)}
+            onPlay={() => createview(post.id)}
             className="w-full md:w-52 lg:w-72 mx-auto"
             controls
             muted

@@ -3,7 +3,8 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useGetUserDetailQuery, useUpdatedetailsMutation,useGetAllLikesQuery,
   useGetallcommentsQuery,
   useGetallsharesQuery,
-  useGetallimpressionsQuery,} from "@/lib/linkTokApi";
+  useGetallimpressionsQuery,
+  useGetallviewsQuery,} from "@/lib/linkTokApi";
 import { Button } from "@/ui/button";
 import {
   Dialog,
@@ -75,6 +76,7 @@ export default function page() {
   const {data:allComments,refetch:refetchComments}=useGetallcommentsQuery();
 const {data:allShares,refetch:refetchShares}=useGetallsharesQuery();
 const {data:allImpressions,refetch:refetchImpressions}=useGetallimpressionsQuery();
+const {data:allViews,refetch:refetchViews}=useGetallviewsQuery();
 
 
 
@@ -86,7 +88,7 @@ const {data:allImpressions,refetch:refetchImpressions}=useGetallimpressionsQuery
     refetchComments();
     refetchShares();
     refetchImpressions();
-
+refetchViews();
   }, [isSuccess, refetch]);
 
   if (isLoading) return <Loader/>;
@@ -153,6 +155,10 @@ const {data:allImpressions,refetch:refetchImpressions}=useGetallimpressionsQuery
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">impressions</h2>
           <p className="text-3xl">{allImpressions?.totalImpressions}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold">impressions</h2>
+          <p className="text-3xl">{allViews?.totalViews}</p>
         </div>
       </div>
       <Toaster />
