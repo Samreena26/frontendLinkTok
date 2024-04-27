@@ -54,7 +54,7 @@ export default function Page() {
           <div className="relative">
           <video
             src={post.mediaUrl}
-            onCanPlay={() => createimpression(post.id)}
+            onMouseEnter={() => createimpression(post.id)}
             onPlay={() => createview(post.id)}
             className="w-full md:w-52 lg:w-72 mx-auto"
             controls

@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { stringify } from "querystring";
-import internal from "stream";
+import { useRouter } from 'next/router';
 
 interface Response {
   message: string;
@@ -113,6 +112,7 @@ interface updatedetailsResponse {
 
 // Define a service using a base URL and expected endpoints
 export const linkTokApi = createApi({
+  
   reducerPath: "linkTokApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://127.0.0.1:8000/api/",
@@ -122,6 +122,8 @@ export const linkTokApi = createApi({
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
+      
+       
       headers.set("Accept", "application/json");
       return headers;
     },
@@ -141,6 +143,14 @@ export const linkTokApi = createApi({
         body: credentials,
       }),
     }),
+
+    signoutUser:builder.mutation<{message:string},void>({
+      query: () => ({
+        url: "logout",
+        method: "Post",
+      }),
+    }),
+
     getUserDetail: builder.query<UserDetailResponse, void>({
       query: () => ({
         url: "userdetail",
@@ -491,6 +501,7 @@ getallviews: builder.query<{totalViews:number}, void>({
 export const {
   useSignupUserMutation,
   useSigninUserMutation,
+  useSignoutUserMutation,
   useGetUserDetailQuery,
   useCreatePostMutation,
   useUpdatePostMutation,
@@ -530,3 +541,6 @@ useGetallviewsQuery,
   useGetForYouVideosQuery,
 
 } = linkTokApi;
+
+
+//custom hook

@@ -1,11 +1,31 @@
 'use client';
+
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+
+
+
+
 const Navbar: React.FC = () => {
+  
   const router = useRouter();
   const pathname = usePathname();
+
+  const Token=localStorage.getItem('token');
+  if(!Token){
+    router.push('/')
+  }
+
+
   // Check if the current route is an admin route
   const isAdminRoute = pathname.startsWith('/admin');
+
+  const noNavbarPaths = ['/', '/signup', '/signin'];
+
+  // Do not render the Navbar on specified paths
+  if (noNavbarPaths.includes(pathname)) {
+    return null;
+  }
 
   // Render admin-specific navigation if on an admin route
   if (isAdminRoute) {

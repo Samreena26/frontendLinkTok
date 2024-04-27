@@ -4,8 +4,9 @@ import { useGetUserDetailQuery, useUpdatedetailsMutation,useGetAllLikesQuery,
   useGetallcommentsQuery,
   useGetallsharesQuery,
   useGetallimpressionsQuery,
-  useGetallviewsQuery,} from "@/lib/linkTokApi";
-import { Button } from "@/ui/button";
+  useGetallviewsQuery,
+  useSignoutUserMutation} from "@/lib/linkTokApi";
+  import { Button } from '@/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
+import { useRouter } from 'next/navigation';
 import Loader from "@/ui/Loader";
 
 interface updatedetailsResponse {
@@ -31,6 +33,7 @@ interface FormState {
 }
 
 export default function page() {
+  const router = useRouter();
   const { toast } = useToast();
   const { data, isError, isLoading, refetch } = useGetUserDetailQuery();
   const [updatedetails, { isSuccess }] = useUpdatedetailsMutation();
@@ -71,14 +74,33 @@ export default function page() {
     }
   };
 
+  
 
   const {data:allLikes ,refetch:refetchlikes}=useGetAllLikesQuery();
   const {data:allComments,refetch:refetchComments}=useGetallcommentsQuery();
 const {data:allShares,refetch:refetchShares}=useGetallsharesQuery();
 const {data:allImpressions,refetch:refetchImpressions}=useGetallimpressionsQuery();
 const {data:allViews,refetch:refetchViews}=useGetallviewsQuery();
-
-
+const [signoutUser]=useSignoutUserMutation();
+const handlesignout=async ()=>{
+ 
+  try{
+    const response= await signoutUser().unwrap();
+    toast({
+      title: 'Success',
+      description: response.message,
+    });
+    localStorage.removeItem('token');
+    router.push('/');
+  }catch(err:any){
+    const errorMessages = err.data?.errors ? Object.values(err.data.errors).flat().join('\n') : 'An unexpected error occurred.';
+    toast({
+      title: 'Error',
+      description: errorMessages,
+      variant: 'destructive'
+    });
+  }
+}
 
   useEffect(() => {
     if (isSuccess) {
@@ -96,6 +118,12 @@ refetchViews();
 
   return (
     <div className="bg-gray-100 min-h-screen">
+    <div className="flex justify-end p-4">
+    <Button   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
+    onClick={handlesignout}>
+      Sign Out
+    </Button>
+  </div>
       {data && (
         <div className="flex flex-col items-center pt-8">
           <img className="h-24 w-24 rounded-full" src={data.profilePictureURL} alt="Profile" />
@@ -157,7 +185,7 @@ refetchViews();
           <p className="text-3xl">{allImpressions?.totalImpressions}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold">impressions</h2>
+          <h2 className="text-lg font-semibold">Views</h2>
           <p className="text-3xl">{allViews?.totalViews}</p>
         </div>
       </div>

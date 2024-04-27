@@ -65,10 +65,11 @@ export default function Page() {
 
   const [likepost] = useLikepostMutation();
   const [createcomment] = useCreatecommentMutation();
-const[createimpression]=useCreateimpressionMutation();
+
 const[updatePost]=useUpdatePostMutation();
 const[deltePost]=useDeleltePostMutation();
 const[createview]=useCreateviewMutation();
+const[createimpression]=useCreateimpressionMutation();
 const [commentText, setcommentText] = useState("");
 
 const [formData, setFormData] = useState<FormState>({
@@ -373,7 +374,7 @@ console.log(shareData);
     // Display video if it's a video
     <video
       className="h-48 w-full object-contain rounded-t-lg"
-      onCanPlay={() => createimpression(post.id)}
+      onMouseEnter={() => createimpression(post.id)}
       onPlay={() => createview(post.id)}
       controls
       muted

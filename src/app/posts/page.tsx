@@ -57,6 +57,7 @@ export default function page() {
 
   const [likepost] = useLikepostMutation();
 
+  
   const handleLike = async (id: number) => {
     try {
       // Trigger the likepost mutation and unwrap the result to handle errors
@@ -196,11 +197,28 @@ export default function page() {
 
     {/* Display details of the selected post */}
     <div className="bg-white shadow rounded-lg p-4">
-      <img
-        className="h-48 w-full object-contain rounded-t-lg"
-        src={post.mediaURL}
-        alt="Post Media"
-      />
+    {post.postType === 'photo' ? (
+    // Display image if it's a photo
+    <img
+      className="h-48 w-full object-contain rounded-t-lg"
+      onMouseEnter={() => createimpression(post.id)}
+      src={post.mediaUrl}
+      alt="Post Media"
+    />
+  ) : (
+    // Display video if it's a video
+    <video
+      className="h-48 w-full object-contain rounded-t-lg"
+      onMouseEnter={() => createimpression(post.id)}
+      onPlay={() => createview(post.id)}
+      controls
+      muted
+      loop
+    >
+      <source src={post.mediaUrl} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  )}
       <div className="p-4">
         <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
         <p className="text-gray-600">Tags: {post.tags}</p>
