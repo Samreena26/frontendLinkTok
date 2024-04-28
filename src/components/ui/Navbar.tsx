@@ -1,25 +1,31 @@
 'use client';
-
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
-
-
-
+import {useEffect} from 'react';
+import { useRouter } from 'next/navigation'; // Corrected import for useRouter
+import { usePathname } from 'next/navigation'; // Corrected import for usePathname
 
 const Navbar: React.FC = () => {
-  
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname(); // Updated to use usePathnames
 
-  const Token=localStorage.getItem('token');
-  if(!Token){
-    router.push('/')
-  }
-
+  const Token = localStorage.getItem('token');
+  
+  // Redirect based on the presence of the token
+  useEffect(() => {
+    // If there is a token and the user is on the root path, redirect to /home
+    if (Token && pathname === '/') {
+      router.push('/home');
+    } else if (!Token) {
+      const allowedPaths = ['/', '/signin', '/signup'];
+      if (!allowedPaths.includes(pathname)) {
+        router.push('/signin'); // Redirect to signin if on a restricted path
+      }
+    }
+  }, [Token, pathname, router]);
 
   // Check if the current route is an admin route
   const isAdminRoute = pathname.startsWith('/admin');
 
+  // Define paths where the Navbar should not be rendered
   const noNavbarPaths = ['/', '/signup', '/signin'];
 
   // Do not render the Navbar on specified paths
