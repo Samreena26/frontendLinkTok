@@ -30,6 +30,7 @@ import {
   useUpdatePostMutation,
   useDeleltePostMutation,
   useCreateviewMutation,
+  useCreateReportMutation
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -65,7 +66,7 @@ export default function Page() {
 
   const [likepost] = useLikepostMutation();
   const [createcomment] = useCreatecommentMutation();
-
+  const [createReport] =useCreateReportMutation();
 const[updatePost]=useUpdatePostMutation();
 const[deltePost]=useDeleltePostMutation();
 const[createview]=useCreateviewMutation();
@@ -78,9 +79,32 @@ const [formData, setFormData] = useState<FormState>({
     dateTime: "", // Initialize dateTime property
   }); 
 
+  const [reason, setreason] = useState(""); 
+
+
+  const handlereasonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setreason(e.target.value);
+  };
+  
+  const handlereport = async (post_id: number, reason: string,user_id:number) => {
+    try {
+     
+      const response = await createReport({ post_id, reason,user_id }).unwrap();
+      console.log(response);
+      toast({
+        title: "Success",
+        description: "Report created successfully",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.data?.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
+  };
   
 
-  
 
   const handleCaptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, caption: e.target.value });
@@ -265,28 +289,6 @@ console.log(shareData);
   
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
     if (isSuccess) {
       refetch();
@@ -438,6 +440,32 @@ console.log(shareData);
 
             <DialogFooter>
               <Button onClick={() => handleUpdate(post.id)}>Update</Button>
+             
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger>
+            <Button >report Post</Button>
+          </DialogTrigger>
+          <DialogContent>
+            {/* Content for updating the post */}
+            {/* Add your form fields or content for updating the post here */}
+            {/* For example: */}
+            <div className="mb-4">
+            <Label htmlFor="reason">reason</Label>
+            <Input
+              type="text"
+              id="reason"
+              value={reason}
+              onChange={handlereasonChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          
+
+            <DialogFooter>
+              <Button onClick={() => handlereport(post.id,reason,post.userId)}>report</Button>
              
             </DialogFooter>
           </DialogContent>

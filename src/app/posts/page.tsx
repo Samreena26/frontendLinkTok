@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState ,ChangeEvent} from "react";
 
 import {
   Dialog,
@@ -12,19 +12,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/ui/popover"
+import {
   useViewfollowingpostQuery,
   useLikepostMutation,
   useCreatecommentMutation,
   useViewcommentsQuery,
   useCreateimpressionMutation,
   useCreateviewMutation,
-  
+  useCreateReportMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
-
+import { Label } from "@/ui/label";
 
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 
@@ -56,7 +61,7 @@ export default function page() {
   console.log(data);
 
   const [likepost] = useLikepostMutation();
-
+  const [createReport] =useCreateReportMutation();
   
   const handleLike = async (id: number) => {
     try {
@@ -80,6 +85,34 @@ export default function page() {
       });
     }
   };
+
+
+  const [reason, setreason] = useState(""); 
+
+
+  const handlereasonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setreason(e.target.value);
+  };
+  
+  const handlereport = async (post_id: number, reason: string,user_id:number) => {
+    try {
+     
+      const response = await createReport({ post_id, reason,user_id }).unwrap();
+      console.log(response);
+      toast({
+        title: "Success",
+        description: "Report created successfully",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.data?.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
+  };
+
+
 
 
 
@@ -167,6 +200,62 @@ export default function page() {
         Your browser does not support the video tag.
       </video>
     )}
+
+    {/* Three vertical dots in a round white div */}
+  <div className="absolute top-0 right-0 mt-2 ml-2">
+  <Popover>
+    <PopoverTrigger>
+      <div className="rounded-full bg-white p-2 cursor-pointer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 text-gray-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 8a2 2 0 100-4 2 2 0 000 4zm0 2a2 2 0 100 4 2 2 0 000-4zm0 6a2 2 0 100 4 2 2 0 000-4z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+    </PopoverTrigger>
+    <PopoverContent>
+      {/* Popover content */}
+      <div className="p-2 space-x-3">
+        
+        <Dialog>
+          <DialogTrigger>
+            <Button >report Post</Button>
+          </DialogTrigger>
+          <DialogContent>
+            {/* Content for updating the post */}
+            {/* Add your form fields or content for updating the post here */}
+            {/* For example: */}
+            <div className="mb-4">
+            <Label htmlFor="reason">reason</Label>
+            <Input
+              type="text"
+              id="reason"
+              value={reason}
+              onChange={handlereasonChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          
+
+            <DialogFooter>
+              <Button onClick={() => handlereport(post.post_id ,reason,post.userId)}>report</Button>
+             
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        
+      </div>
+    </PopoverContent>
+  </Popover>
+  </div>
+
             </div>
             <div className="space-x-4">
               <Button onClick={() => handleLike(post.post_id)}>

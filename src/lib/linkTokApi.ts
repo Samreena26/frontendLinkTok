@@ -290,6 +290,15 @@ export const linkTokApi = createApi({
       }),
     }),
     
+
+
+    createReport:builder.mutation<string, {post_id:number,reason:string,user_id:number}>({
+      query: (credentials) => ({
+        url: `/createreport`,
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
     //admin endpointes 
       // getreports
       // deletereport
@@ -526,7 +535,7 @@ export const {
   useUnblockUserMutation,
 useGetPostQuery,
 useShareMutation,
-//remaing hooks
+useCreateReportMutation,
 useCreateimpressionMutation,
 useCreateviewMutation,
 useGetAllLikesQuery,
