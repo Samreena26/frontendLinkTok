@@ -1,25 +1,24 @@
-'use client'
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useGetPostQuery } from '@/lib/linkTokApi';
 import Loader from '@/ui/Loader';
 
-export default function page() {
+// This could be a separate component or the same page component
+function PostContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('post_id');
   const { data, error, isLoading } = useGetPostQuery(searchQuery);
 
-  if (isLoading) return <Loader/>;
+  if (isLoading) return <Loader />;
   if (error) return <p>Error</p>;
 
   const { caption, likes, mediaUrl, tags, postType } = data;
 
   return (
-    
     <div>
-         <div className="p-4">
+      <div className="p-4">
         <h2 className="text-xl font-bold mb-2">{caption}</h2>
         <p className="text-gray-600">Tags: {tags}</p>
-      
         {/* Add other relevant post details */}
       </div>
       {postType === 'photo' ? (
@@ -39,8 +38,14 @@ export default function page() {
           Your browser does not support the video tag.
         </video>
       )}
-
-     
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <PostContent />
+    </Suspense>
   );
 }
