@@ -7,10 +7,11 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname(); // Updated to use usePathnames
 
-  const Token = localStorage.getItem('token');
+  
   
   // Redirect based on the presence of the token
   useEffect(() => {
+    const Token = localStorage.getItem('token');
     // If there is a token and the user is on the root path, redirect to /home
     if (Token && pathname === '/') {
       router.push('/home');
@@ -20,7 +21,7 @@ const Navbar: React.FC = () => {
         router.push('/signin'); // Redirect to signin if on a restricted path
       }
     }
-  }, [Token, pathname, router]);
+  }, [ pathname, router]);
 
   // Check if the current route is an admin route
   const isAdminRoute = pathname.startsWith('/admin');
