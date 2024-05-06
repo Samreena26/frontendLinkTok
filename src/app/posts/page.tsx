@@ -24,6 +24,7 @@ import {
   useCreateimpressionMutation,
   useCreateviewMutation,
   useCreateReportMutation,
+  useShareMutation,
 } from "@/lib/linkTokApi";
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
@@ -62,7 +63,7 @@ export default function page() {
 
   const [likepost] = useLikepostMutation();
   const [createReport] =useCreateReportMutation();
-  
+  const [sharePost, { isLoading: isSharing }] = useShareMutation();
   const handleLike = async (id: number) => {
     try {
       // Trigger the likepost mutation and unwrap the result to handle errors
@@ -133,6 +134,7 @@ export default function page() {
       // Clear the input field after successful submission
       setcommentText("");
       commentsFetch(); // Refetch comments after successful submission
+
     } catch (err: any) {
       // Extract error messages from the server response and display them in a toast
       const errorMessages = err.data?.error
@@ -152,7 +154,7 @@ export default function page() {
 
 
 
-    setpost_id(postId); // Update current post ID
+    setpost_id(postId); // Update current post post_id
 
     // Open and potentially refetch comments for the new post
     
@@ -162,6 +164,16 @@ export default function page() {
     }
   };
 
+
+  const handleShare = async ( post_id:number) => {
+    try {
+      const shareData = await sharePost(post_id).unwrap();
+console.log(shareData);
+      // Handle successful share
+    } catch (error) {
+      // Handle error
+    }
+  };
 
   return (
     <>
@@ -191,7 +203,7 @@ export default function page() {
       <video
         className="h-48 w-full object-contain rounded-t-lg"
         onCanPlay={()=>{createimpression(post.post_id)}}
-        onPlay={() => createview(post.id)}
+        onPlay={() => createview(post.post_id)}
         controls
         muted
         loop
@@ -260,8 +272,7 @@ export default function page() {
             <div className="space-x-4">
               <Button onClick={() => handleLike(post.post_id)}>
                 <Heart className="mr-2" />
-                {post.like_count}
-                like
+                {post.likes} like
               </Button>
               {/* <Button onClick={() => handleComment(post.post_id)}>
                 <MessageCircle className="mr-2" />
@@ -274,7 +285,7 @@ export default function page() {
 <Dialog >
   <DialogTrigger asChild>
     <Button variant="default" onClick={() => handleComment(post.post_id)}>
-      {post.comments}  <MessageCircle className="mr-2 ml-2" /> comments
+      {post.comments} <MessageCircle className="mr-2 ml-2" /> comments
     </Button>
   </DialogTrigger>
 
@@ -290,21 +301,21 @@ export default function page() {
     // Display image if it's a photo
     <img
       className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.id)}
-      src={post.mediaUrl}
+      onMouseEnter={() => createimpression(post.post_id)}
+      src={post.mediaURL}
       alt="Post Media"
     />
   ) : (
     // Display video if it's a video
     <video
       className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.id)}
-      onPlay={() => createview(post.id)}
+      onMouseEnter={() => createimpression(post.post_id)}
+      onPlay={() => createview(post.post_id)}
       controls
       muted
       loop
     >
-      <source src={post.mediaUrl} type="video/mp4" />
+      <source src={post.mediaURL} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   )}
@@ -360,6 +371,24 @@ export default function page() {
 
 
 
+<Popover >
+  <PopoverTrigger asChild>
+    <Button variant="default" onClick={() => handleShare(post.post_id)}>{post.shares} share</Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-80">
+    <div className="grid gap-4 p-4">
+      <div className="space-y-2">
+        <h4 className="font-medium leading-none" >Share</h4>
+        <input
+          type="text"
+          readOnly
+          value={`http://localhost:3000/getpost?post_id=${post.post_id}`} // Replace `post.id` with the actual post post_id variable
+          className="w-full text-sm border-gray-300 rounded-md"
+        />
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>
 
 
 
@@ -379,29 +408,9 @@ export default function page() {
 
 
 
-
-              <Button>
-                <Share2 className="mr-2" />
-                share
-              </Button>
+              
             </div>
-            {isSectionVisible[post.post_id] && (
-              <div>
-                {/* Your section content goes here */}
-                <p>This is the section content</p>
-                <Input
-                  type="text"
-                  name="commentText"
-                  value={commentText}
-                  onChange={(e) => setcommentText(e.target.value)}
-                  className="w-full p-2 border rounded"
-                />
-                <Button onClick={() => handleSubmitComment(post.post_id)}>
-                  <MessageCircle className="mr-2" />
-                  post comment
-                </Button>
-              </div>
-            )}
+            
           </div>
         ))}
         <Toaster />
