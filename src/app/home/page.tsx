@@ -479,128 +479,145 @@ console.log(shareData);
   </Popover>
   </div>
 </div>
+
+
+
+
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
                   <p className="text-gray-600">Tags: {post.tags}</p>
                 </div>
-                <div className="space-x-4">
-                  <Button onClick={() => handleLike(post.id)}>
-                    <Heart className="mr-2" />
-                    {post.likes} like
-                  </Button>
-                  {/* <Button onClick={() => handleComment(post.id)}>
-                    <MessageCircle className="mr-2" />
-                    {post.comments} comments
-                  </Button> */}
-<Dialog >
-  <DialogTrigger asChild>
-    <Button variant="default" onClick={() => handleComment(post.id)}>
-      {post.comments} <MessageCircle className="mr-2 ml-2" /> comments
-    </Button>
-  </DialogTrigger>
+                <div className="space-x-4 flex items-center">
+  <Button
+    onClick={() => handleLike(post.id)}
+    className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300"
+  >
+    <Heart className="mr-2" />
+    {post.likes} like
+  </Button>
 
-  <DialogContent className="sm:max-w-4xl max-h-[500px] overflow-y-auto">
-    <DialogHeader>
-      <DialogTitle>Post Details</DialogTitle>
-      <DialogDescription>Details of the selected post</DialogDescription>
-    </DialogHeader>
-
-    {/* Display details of the selected post */}
-    <div className="bg-white shadow rounded-lg p-4">
-    {post.postType === 'photo' ? (
-    // Display image if it's a photo
-    <img
-      className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.id)}
-      src={post.mediaUrl}
-      alt="Post Media"
-    />
-  ) : (
-    // Display video if it's a video
-    <video
-      className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.id)}
-      onPlay={() => createview(post.id)}
-      controls
-      muted
-      loop
-    >
-      <source src={post.mediaUrl} type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-  )}
-      <div className="p-4">
-        <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
-        <p className="text-gray-600">Tags: {post.tags}</p>
-      </div>
-    </div>
-
-    {/* Comment section */}
-    <div className="mt-4">
-      <Input
-        type="text"
-        name="commentText"
-        value={commentText}
-        onChange={(e) => setcommentText(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
+  {/* Dialog for comments */}
+  <Dialog>
+    <DialogTrigger asChild>
       <Button
-        onClick={() => handleSubmitComment(post.id)}
-        className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        variant="default"
+        onClick={() => handleComment(post.id)}
+        className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300"
       >
-        Post Comment
+        {post.comments} <MessageCircle className="mr-2 ml-2" /> comments
       </Button>
+    </DialogTrigger>
+
+    <DialogContent className="sm:max-w-4xl max-h-[500px] overflow-y-auto shadow-lg rounded-lg">
+      <DialogHeader>
+        <DialogTitle>Post Details</DialogTitle>
+        <DialogDescription>Details of the selected post</DialogDescription>
+      </DialogHeader>
+
+      {/* Display details of the selected post */}
+      <div className="bg-white shadow rounded-lg p-4 transition duration-300 ease-in-out hover:shadow-xl">
+        {post.postType === 'photo' ? (
+          // Display image if it's a photo
+          <img
+            className="h-48 w-full object-contain rounded-t-lg"
+            onMouseEnter={() => createimpression(post.id)}
+            src={post.mediaUrl}
+            alt="Post Media"
+          />
+        ) : (
+          // Display video if it's a video
+          <video
+            className="h-48 w-full object-contain rounded-t-lg"
+            onMouseEnter={() => createimpression(post.id)}
+            onPlay={() => createview(post.id)}
+            controls
+            muted
+            loop
+          >
+            <source src={post.mediaUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
+          <p className="text-gray-600">Tags: {post.tags}</p>
+        </div>
+      </div>
+
+      {/* Comment section */}
       <div className="mt-4">
-        {/* Display comments for the selected post */}
-        {commentsData?.commentsData.map((comment) => (
-          <div key={comment.id} className="flex items-center mt-2">
-            <img
-              className="h-10 w-10 object-cover rounded-full"
-              src={comment.profilePictureUrl}
-              alt="profile"
-            />
-            <div className="ml-2">
-              <h4 className="font-bold">{comment.username}</h4>
-              <p>{comment.commentText}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <DialogFooter className="sm:justify-start">
-      <DialogClose asChild>
-        <Button type="button" variant="secondary">
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
-
-
-
-<Popover >
-  <PopoverTrigger asChild>
-    <Button variant="default" onClick={() => handleShare(post.id)}>{post.shares} share</Button>
-  </PopoverTrigger>
-  <PopoverContent className="w-80">
-    <div className="grid gap-4 p-4">
-      <div className="space-y-2">
-        <h4 className="font-medium leading-none" >Share</h4>
-        <input
+        <Input
           type="text"
-          readOnly
-          value={`http://localhost:3000/getpost?post_id=${post.id}`} // Replace `post.id` with the actual post ID variable
-          className="w-full text-sm border-gray-300 rounded-md"
+          name="commentText"
+          value={commentText}
+          onChange={(e) => setcommentText(e.target.value)}
+          className="w-full p-2 border rounded focus:ring focus:border-blue-300"
         />
+        <Button
+          onClick={() => handleSubmitComment(post.id)}
+          className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+        >
+          Post Comment
+        </Button>
+        <div className="mt-4">
+          {/* Display comments for the selected post */}
+          {commentsData?.commentsData.map((comment) => (
+            <div key={comment.id} className="flex items-center mt-2">
+              <img
+                className="h-10 w-10 object-cover rounded-full"
+                src={comment.profilePictureUrl}
+                alt="profile"
+              />
+              <div className="ml-2">
+                <h4 className="font-bold">{comment.username}</h4>
+                <p>{comment.commentText}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </PopoverContent>
-</Popover>
 
-                </div>
+      <DialogFooter className="sm:justify-start">
+        <DialogClose asChild>
+          <Button
+            type="button"
+            variant="secondary"
+            className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300"
+          >
+            Close
+          </Button>
+        </DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+
+  {/* Popover for share */}
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button
+        variant="default"
+        onClick={() => handleShare(post.id)}
+        className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300"
+      >
+        {post.shares} share
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-80 shadow-lg rounded-lg">
+      <div className="grid gap-4 p-4">
+        <div className="space-y-2">
+          <h4 className="font-medium leading-none">Share</h4>
+          <input
+            type="text"
+            readOnly
+            value={`http://localhost:3000/getpost?post_id=${post.id}`}
+            className="w-full text-sm border-gray-300 rounded-md focus:ring focus:border-blue-300"
+          />
+        </div>
+      </div>
+    </PopoverContent>
+  </Popover>
+</div>
+
 
 
 

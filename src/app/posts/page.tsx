@@ -177,7 +177,7 @@ console.log(shareData);
 
   return (
     <>
-      <div className="w-screen h-screen ">
+      <div className="w-screen max-h-full ">
       {isLoading && <Loader />}
         {data?.followingPost.map((post: any) => (
           <div key={post.post_id}>
@@ -214,13 +214,13 @@ console.log(shareData);
     )}
 
     {/* Three vertical dots in a round white div */}
-  <div className="absolute top-0 right-0 mt-2 ml-2">
+  <div className="absolute top-14 right-4 mt-2 ml-2 ">
   <Popover>
     <PopoverTrigger>
-      <div className="rounded-full bg-white p-2 cursor-pointer">
+      <div className="rounded-full bg-white  p-2 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4 text-gray-500"
+          className="h-4 w-4 text-gray-50 "
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -269,8 +269,9 @@ console.log(shareData);
   </div>
 
             </div>
-            <div className="space-x-4">
-              <Button onClick={() => handleLike(post.post_id)}>
+            <div className="space-x-4 flex items-center">
+              <Button onClick={() => handleLike(post.post_id)} 
+              className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300">
                 <Heart className="mr-2" />
                 {post.likes} like
               </Button>
@@ -284,7 +285,8 @@ console.log(shareData);
 
 <Dialog >
   <DialogTrigger asChild>
-    <Button variant="default" onClick={() => handleComment(post.post_id)}>
+    <Button variant="default" onClick={() => handleComment(post.post_id)} 
+    className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300">
       {post.comments} <MessageCircle className="mr-2 ml-2" /> comments
     </Button>
   </DialogTrigger>
@@ -373,7 +375,8 @@ console.log(shareData);
 
 <Popover >
   <PopoverTrigger asChild>
-    <Button variant="default" onClick={() => handleShare(post.post_id)}>{post.shares} share</Button>
+    <Button variant="default" onClick={() => handleShare(post.post_id)} 
+    className="transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring focus:border-blue-300">{post.shares} share</Button>
   </PopoverTrigger>
   <PopoverContent className="w-80">
     <div className="grid gap-4 p-4">
