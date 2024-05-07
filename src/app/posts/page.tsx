@@ -116,7 +116,6 @@ export default function page() {
 
 
 
-
   const handleSubmitComment = async (postId: number) => {
     try {
       // Trigger the createcomment mutation and unwrap the result to handle errors
@@ -189,7 +188,7 @@ console.log(shareData);
               />
               <h3 className="text-xl font-bold">{post.username}</h3>
             </div>
-            <div>
+            <div className="relative" >
             {post.postType === 'photo' ? (
       // Display image if it's a photo
       <img
@@ -217,7 +216,7 @@ console.log(shareData);
   <div className="absolute top-14 right-4 mt-2 ml-2 ">
   <Popover>
     <PopoverTrigger>
-      <div className="rounded-full bg-white  p-2 cursor-pointer">
+      <div className="rounded-full bg-black  p-2 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-4 w-4 text-gray-50 "
@@ -257,7 +256,7 @@ console.log(shareData);
           
 
             <DialogFooter>
-              <Button onClick={() => handlereport(post.post_id ,reason,post.userId)}>report</Button>
+              <Button onClick={() => handlereport(post.post_id ,reason,post.user_id)}>report</Button>
              
             </DialogFooter>
           </DialogContent>
