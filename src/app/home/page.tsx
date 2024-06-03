@@ -83,9 +83,6 @@ const [formData, setFormData] = useState<FormState>({
   const [reason, setreason] = useState(""); 
 
 
-
-
-  
   const handlereasonChange = (e: ChangeEvent<HTMLInputElement>) => {
     setreason(e.target.value);
   };
@@ -509,102 +506,89 @@ console.log(shareData);
     </Button>
   </DialogTrigger>
 
-  <DialogContent className="sm:max-w-4xl max-h-[500px] overflow-y-auto">
-    <DialogHeader>
-      <DialogTitle>Post Details</DialogTitle>
-      <DialogDescription>Details of the selected post</DialogDescription>
-    </DialogHeader>
+              <DialogContent className="sm:max-w-4xl max-h-[500px] overflow-y-auto bg-gray-300">
+                <DialogHeader>
+                  <DialogTitle>Post Details</DialogTitle>
+                  <DialogDescription className="text-gray-600">Details of the selected post</DialogDescription>
+                </DialogHeader>
 
-    {/* Display details of the selected post */}
-    <div className="bg-white shadow rounded-lg p-4">
-      <img
-        className="h-48 w-full object-contain rounded-t-lg"
-        src={post.mediaUrl}
-        alt="Post Media"
-      />
-      <div className="p-4">
-        <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
-        <p className="text-gray-600">Tags: {post.tags}</p>
-      </div>
-    </div>
-
-    {/* Comment section */}
-    <div className="mt-4">
-      <Input
-        type="text"
-        name="commentText"
-        value={commentText}
-        onChange={(e) => setcommentText(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
-      <Button
-        onClick={() => handleSubmitComment(post.id)}
-        className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-      >
-        Post Comment
-      </Button>
-      <div className="mt-4">
-        {/* Display comments for the selected post */}
-        {commentsData?.commentsData.map((comment) => (
-          <div key={comment.id} className="flex items-center mt-2">
-            <img
-              className="h-10 w-10 object-cover rounded-full"
-              src={comment.profilePictureUrl}
-              alt="profile"
-            />
-            <div className="ml-2">
-              <h4 className="font-bold">{comment.username}</h4>
-              <p>{comment.commentText}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <DialogFooter className="sm:justify-start">
-      <DialogClose asChild>
-        <Button type="button" variant="secondary">
-          Close
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
-
-
-
-<Popover >
-  <PopoverTrigger asChild>
-    <Button variant="default" onClick={() => handleShare(post.id)}>{post.shares} share</Button>
-  </PopoverTrigger>
-  <PopoverContent className="w-80">
-    <div className="grid gap-4 p-4">
-      <div className="space-y-2">
-        <h4 className="font-medium leading-none" >Share</h4>
-        <input
-          type="text"
-          readOnly
-          value={`http://localhost:3000/getpost?post_id=${post.id}`} // Replace `post.id` with the actual post ID variable
-          className="w-full text-sm border-gray-300 rounded-md"
-        />
-      </div>
-    </div>
-  </PopoverContent>
-</Popover>
-
+                {/* Display details of the selected post */}
+                <div className="bg-gray-400 shadow rounded-lg p-4">
+                <div className="p-4">
+                    <h2 className="text-xl font-bold mb-2">{post.caption}</h2>
+                    <p className="text-gray-600">Tags: # {post.tags}</p>
+                  </div>
+                  <img
+                    className="h-48 w-full object-contain rounded-t-lg"
+                    src={post.mediaUrl}
+                    alt="Post Media"
+                  />
                 </div>
 
+                {/* Comment section */}
+                <div className="mt-4">
+                  <Input
+                    type="text"
+                    name="commentText"
+                    value={commentText}
+                    onChange={(e) => setcommentText(e.target.value)}
+                    className="w-full p-2 border rounded bg-white"
+                  />
+                  <Button
+                    onClick={() => handleSubmitComment(post.id)}
+                    className="mt-4 bg-gray-900 text-white py-2 px-4 rounded hover:bg-orange-900"
+                  >
+                    Post Comment
+                  </Button>
+                  <div className="mt-6">
+                    {/* Display comments for the selected post */}
+                    {commentsData?.commentsData.map((comment) => (
+                      <div key={comment.id} className="flex items-center mt-2">
+                        <img
+                          className="h-10 w-10 object-cover rounded-full"
+                          src={comment.profilePictureUrl}
+                          alt="profile"
+                        />
+                        <div className="ml-2">
+                          <h4 className="font-bold">{comment.username}</h4>
+                          <p>{comment.commentText}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
+                <DialogFooter className="sm:justify-start">
+                  <DialogClose asChild>
+                    <Button type="button" className="bg-gray-900 hover:bg-orange-900">
+                      Close
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Popover >
+              <PopoverTrigger asChild>
+                <Button onClick={() => handleShare(post.id)} className="bg-gray-900  min-w-max">
+                  <Share2 className="mr-1 size-4" fill="white"/>
+                  {post.shares} share</Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-sky-500">
+                <div className="grid gap-4 p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none">Share</h4>
+                    <input
+                      type="text"
+                      readOnly
+                      value={`http://localhost:3000/getpost?post_id=${post.id}`} // Replace `post.id` with the actual post ID variable
+                      className="w-full text-sm border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-
-                
-
-
-
-
-                 
-             
+                </div>
               </div>
             ))}
         </div>

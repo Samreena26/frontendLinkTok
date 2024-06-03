@@ -64,7 +64,7 @@ export default function page() {
 
   const [likepost] = useLikepostMutation();
   const [createReport] =useCreateReportMutation();
-  
+  const [sharePost, { isLoading: isSharing }] = useShareMutation();
   const handleLike = async (id: number) => {
     try {
       // Trigger the likepost mutation and unwrap the result to handle errors
@@ -117,6 +117,7 @@ export default function page() {
 
 
 
+
   const handleSubmitComment = async (postId: number) => {
     try {
       // Trigger the createcomment mutation and unwrap the result to handle errors
@@ -134,6 +135,7 @@ export default function page() {
       // Clear the input field after successful submission
       setcommentText("");
       commentsFetch(); // Refetch comments after successful submission
+
     } catch (err: any) {
       // Extract error messages from the server response and display them in a toast
       const errorMessages = err.data?.error
@@ -178,7 +180,13 @@ console.log(shareData);
 
   return (
     <>
-      <div className="w-screen h-screen ">
+    <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
+    </div>
+      <div className="bg-gray-300 h-min grid grid-cols-7">
+        <Navbar/>
+        <div className="h-min min-w-max ml-5">
       {isLoading && <Loader />}
       <h1 className="text-2xl font-bold text-center mb-6 pt-7">Friends Posts</h1>
         <div className="grid grid-cols-3 gap-6 ml-8 mt-8">
@@ -192,7 +200,7 @@ console.log(shareData);
               />
               <h3 className="text-xl font-bold">{post.username}</h3>
             </div>
-            <div className="relative" >
+            <div>
             {post.postType === 'photo' ? (
       // Display image if it's a photo
       <img
@@ -206,7 +214,7 @@ console.log(shareData);
       <video
         className="h-48 w-full object-contain rounded-t-lg"
         onCanPlay={()=>{createimpression(post.post_id)}}
-        onPlay={() => createview(post.post_id)}
+        onPlay={() => createview(post.id)}
         controls
         muted
         loop
@@ -217,13 +225,13 @@ console.log(shareData);
     )}
 
     {/* Three vertical dots in a round white div */}
-  <div className="absolute top-0 right-0 mt-2 ml-2">
+  <div className="absolute -mt-64 ml-72">
   <Popover>
     <PopoverTrigger>
-      <div className="rounded-full bg-white p-2 cursor-pointer">
+      <div className="rounded-full bg-gray-900 p-2 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4 text-gray-50 "
+          className="h-4 w-4 text-gray-500"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -259,9 +267,8 @@ console.log(shareData);
           </div>
           
 
-            <DialogFooter>
-              <Button onClick={() => handlereport(post.post_id ,reason,post.userId)}>report</Button>
-             
+          <DialogFooter>
+              <Button onClick={() => handlereport(post.id,reason,post.userId)}>Report</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -272,11 +279,10 @@ console.log(shareData);
   </div>
 
             </div>
-            <div className="space-x-4">
-              <Button onClick={() => handleLike(post.post_id)}>
-                <Heart className="mr-2" />
-                {post.like_count}
-                like
+            <div className="flex space-x-2 my-4 px-2">
+              <Button onClick={() => handleLike(post.post_id)} className="bg-gray-900">
+              <Heart className="mr-2 size-4 fill-red-600" />
+              {post.likes} like
               </Button>
               {/* <Button onClick={() => handleComment(post.post_id)}>
                 <MessageCircle className="mr-2" />
@@ -288,8 +294,9 @@ console.log(shareData);
 
 <Dialog >
   <DialogTrigger asChild>
-    <Button variant="default" onClick={() => handleComment(post.post_id)}>
-      {post.comments}  <MessageCircle className="mr-2 ml-2" /> comments
+    <Button variant="default" onClick={() => handleComment(post.post_id)} className="bg-gray-900">
+    <MessageCircle className="mr-2 fill-white size-4" />
+      {post.comments} comments
     </Button>
   </DialogTrigger>
 
@@ -305,21 +312,21 @@ console.log(shareData);
     // Display image if it's a photo
     <img
       className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.post_id)}
-      src={post.mediaURL}
+      onMouseEnter={() => createimpression(post.id)}
+      src={post.mediaUrl}
       alt="Post Media"
     />
   ) : (
     // Display video if it's a video
     <video
       className="h-48 w-full object-contain rounded-t-lg"
-      onMouseEnter={() => createimpression(post.post_id)}
-      onPlay={() => createview(post.post_id)}
+      onMouseEnter={() => createimpression(post.id)}
+      onPlay={() => createview(post.id)}
       controls
       muted
       loop
     >
-      <source src={post.mediaURL} type="video/mp4" />
+      <source src={post.mediaUrl} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   )}
@@ -372,51 +379,29 @@ console.log(shareData);
   </DialogContent>
 </Dialog>
 
+            <Popover >
+              <PopoverTrigger asChild>
+                <Button variant="default" onClick={() => handleShare(post.post_id)} 
+                className="bg-gray-900 ">
+                <Share2 className="mr-2 fill-white size-4"/>
+                {post.shares} share</Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="grid gap-4 p-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none" >Share</h4>
+                    <input
+                      type="text"
+                      readOnly
+                      value={`http://localhost:3000/getpost?post_id=${post.post_id}`} // Replace `post.id` with the actual post post_id variable
+                      className="w-full text-sm border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              <Button>
-                <Share2 className="mr-2" />
-                share
-              </Button>
             </div>
-            {isSectionVisible[post.post_id] && (
-              <div>
-                {/* Your section content goes here */}
-                <p>This is the section content</p>
-                <Input
-                  type="text"
-                  name="commentText"
-                  value={commentText}
-                  onChange={(e) => setcommentText(e.target.value)}
-                  className="w-full p-2 border rounded"
-                />
-                <Button onClick={() => handleSubmitComment(post.post_id)}>
-                  <MessageCircle className="mr-2" />
-                  post comment
-                </Button>
-              </div>
-            )}
           </div>
         ))}
         <Toaster />
