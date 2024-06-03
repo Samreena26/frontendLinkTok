@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body  suppressHydrationWarning={true}>
       
-      <Navbar />
+      {/* <Navbar /> */}
 
         <ReduxProvider>
           

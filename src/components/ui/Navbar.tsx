@@ -1,4 +1,8 @@
 'use client';
+// import { useRouter } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+// import { useEffect } from 'react';
 import {useEffect} from 'react';
 import { useRouter } from 'next/navigation'; // Corrected import for useRouter
 import { usePathname } from 'next/navigation'; // Corrected import for usePathname
@@ -26,6 +30,10 @@ const Navbar: React.FC = () => {
   // Check if the current route is an admin route
   const isAdminRoute = pathname.startsWith('/admin');
 
+  // Function to check if a given path matches the current route
+  const isActive = (path: string) => {
+    return pathname === path;
+  };
   // Define paths where the Navbar should not be rendered
   const noNavbarPaths = ['/', '/signup', '/signin'];
 
@@ -37,31 +45,34 @@ const Navbar: React.FC = () => {
   // Render admin-specific navigation if on an admin route
   if (isAdminRoute) {
     return (
-      <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
-      <span className="text-xl cursor-pointer" onClick={() => router.push('/admin')}>LinkTok</span>
-      <div className="flex-1 text-center space-x-6">
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/admin/reports')}>reports</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/admin/activeusers')}>Active Users</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/admin/inactiveusers')}>Inactive users</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/admin/blockusers')}>block users</span>
-      </div>
-      
-    </nav>
+      <nav className="flex flex-col items-center bg-gray-800 text-white w-48 h-screen target:text-orange-600">
+       <div className='flex items-center mb-10 bg-lime-600 w-48 h-14'>
+        <span className="text-xl cursor-pointer ml-14" onClick={() => router.push('/admin')}>LinkTok</span>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/admin/reports') ? 'text-orange-600' : ''}`} onClick={() => router.push('/admin/reports')}>Reports</span>
+          <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/admin/activeusers') ? 'text-orange-600' : ''}`} onClick={() => router.push('/admin/activeusers')}>Active Users</span>
+          <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/admin/inactiveusers') ? 'text-orange-600' : ''}`} onClick={() => router.push('/admin/inactiveusers')}>Inactive users</span>
+          <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/admin/blockusers') ? 'text-orange-600' : ''}`} onClick={() => router.push('/admin/blockusers')}>Block users</span>
+        </div>
+      </nav>
     );
   }
 
   // Render the regular navigation for non-admin routes
   return (
-    <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
-      <span className="text-xl cursor-pointer" onClick={() => router.push('/home')}>LinkTok</span>
-      <div className="flex-1 text-center space-x-6">
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/home')}>Home</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/story')}>Story</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/friends')}>Friends</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/posts')}>Posts</span>
-        <span className="text-xl cursor-pointer" onClick={() => router.push('/foryou')}>For you</span>
+    <nav className="flex flex-col items-center bg-gray-800 text-white w-48 h-screen target:text-orange-600">
+      <div className='flex items-center mb-10 bg-lime-600 w-48 h-14'>
+        <span className="text-xl cursor-pointer ml-14" onClick={() => router.push('/home')}>LinkTok</span>
       </div>
-      <span className="text-xl cursor-pointer" onClick={() => router.push('/account')}>Account</span>
+      <div className="flex flex-col space-y-6">
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/home') ? 'text-orange-600' : ''}`} onClick={() => router.push('/home')}>Home</span>
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/story') ? 'text-orange-600' : ''}`} onClick={() => router.push('/story')}>Story</span>
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/friends') ? 'text-orange-600' : ''}`} onClick={() => router.push('/friends')}>Friends</span>
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/posts') ? 'text-orange-600' : ''}`} onClick={() => router.push('/posts')}>Posts</span>
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/foryou') ? 'text-orange-600' : ''}`} onClick={() => router.push('/foryou')}>For you</span>
+        <span className={`text-xl cursor-pointer text-center hover:bg-lime-600 hover:h-7 hover:w-48 ${isActive('/account') ? 'text-orange-600' : ''}`} onClick={() => router.push('/account')}>Account</span>
+      </div>
     </nav>
   );
 };

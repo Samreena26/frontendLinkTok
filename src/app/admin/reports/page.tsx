@@ -15,6 +15,7 @@ import {useGetRepostsQuery,
         DialogTrigger,
       } from "@/ui/dialog"
 import Loader from '@/ui/Loader';
+import Navbar from '@/components/ui/Navbar';
 
 
 
@@ -61,21 +62,20 @@ export default function page(){
   };
 
   return (
-    <div>
+    <>
+    <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
+  </div>
+    <div className="bg-pink-300 grid grid-cols-6 h-min">
+      <Navbar/>
+      <div className="h-min min-w-max mt-2 mb-6">
       <h1 className="text-2xl font-bold">Reports</h1>
       {data && data.reports.length > 0 ? (
         <ul>
           {data.reports.map((report) => (
             <li key={report.reportId} className="p-4 border-b">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p><strong>Report ID:</strong> {report.reportId}</p>
-                  <p><strong>Reported By:</strong> {report.reportedByUsername}</p>
-                  <p><strong>Reported for:</strong> {report.reportedForUsername}</p>
-                  <p><strong>Reason:</strong> {report.reason}</p>
-                  <p><strong>Post Caption:</strong> {report.post.caption}</p>
-                  {/* Add more details as needed */}
-                </div>
+              <div className="justify-between items-center">
                 <div>
                 
                   <button
@@ -96,10 +96,9 @@ export default function page(){
                   >
                     Block post
                   </button>
-                </div>
                 <Dialog >
   <DialogTrigger asChild>
-    <Button variant="outline" >
+    <Button className="bg-red-500 text-white px-3 py-1 rounded ml-2 h-8">
        view post
     </Button>
   </DialogTrigger>
@@ -133,6 +132,15 @@ export default function page(){
     </DialogFooter>
   </DialogContent>
 </Dialog>
+</div>
+<div>
+                  <p><strong>Report ID:</strong> {report.reportId}</p>
+                  <p><strong>Reported By:</strong> {report.reportedByUsername}</p>
+                  <p><strong>Reported for:</strong> {report.reportedForUsername}</p>
+                  <p><strong>Reason:</strong> {report.reason}</p>
+                  <p><strong>Post Caption:</strong> {report.post.caption}</p>
+                  {/* Add more details as needed */}
+                </div>
               </div>
             </li>
           ))}
@@ -140,6 +148,8 @@ export default function page(){
       ) : (
         <div>No reports found.</div>
       )}
+      </div>
     </div>
+    </>
   );
 }

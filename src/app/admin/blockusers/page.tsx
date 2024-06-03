@@ -3,6 +3,7 @@
 
 import { useGetBlockedUsersQuery,useUnblockUserMutation } from '@/lib/linkTokApi';
 import Loader from '@/components/ui/Loader'
+import Navbar from '@/components/ui/Navbar';
 export default function page() {
   const { data: blockusersData, isLoading, error,refetch } = useGetBlockedUsersQuery();
 const [unblockUser]=useUnblockUserMutation();
@@ -26,8 +27,15 @@ try{
 
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">blockusers Users</h1>
+    <>
+    <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
+  </div>
+    <div className="bg-pink-300 grid grid-cols-6 h-min">
+      <Navbar/>
+      <div className="h-min min-w-max mt-2 mb-6">
+      <h1 className="text-2xl font-bold">Block Users</h1>
       {blockusersData && blockusersData.blockedUsers.length > 0 ? (
         <ul>
           {blockusersData.blockedUsers.map((user) => (
@@ -47,10 +55,10 @@ try{
               </div>
               <div>
              <button
-               className="bg-blue-500 text-white px-3 py-1 rounded ml-2"
+               className="bg-gray-900 text-white px-3 py-1 rounded ml-12 mt-5"
                onClick={() => handleUnblockUser(user.id)}
              >
-               unBlock User
+               Unblock User
              </button>
            </div>
             </li>
@@ -60,6 +68,8 @@ try{
       ) : (
         <div>No block users found.</div>
       )}
+      </div>
     </div>
+    </>
   );
 }

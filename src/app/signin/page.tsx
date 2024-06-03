@@ -78,21 +78,21 @@ export default function page() {
 
   return (
     <>
-<div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-200 via-pink-300 to-blue-500">
-  <div className="w-full max-w-xs">
-    <form  onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <div className="mb-4">
-            <Label htmlFor="email">email</Label>
-            <Input  placeholder="email" name='email' value={formData.email} onChange={handleChange}/>
+<div className="flex items-center justify-center bg-[url('/signin.png')] bg-cover h-screen  w-screen ">
+  <div className="w-full max-w-xs ml-96 h-min">
+    <form  onSubmit={handleSubmit} className="bg-gray-600 text-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
+    <div className="mb-4 mt-6">
+            <Label htmlFor="email">Email</Label>
+            <Input  placeholder="example@gmail.com" name='email' className='mt-2 text-black bg-gray-300' value={formData.email} onChange={handleChange}/>
           </div>
           <div className="mb-6">
             <Label htmlFor="password">Password</Label>
-            <Input  type="password" placeholder="****************" name='password' value={formData.password} onChange={handleChange} />
+            <Input  type="password" placeholder="****************" name='password' className='mt-2 bg-gray-300 text-black' value={formData.password} onChange={handleChange} />
           </div>
           <div className="flex items-center justify-between">
             <Button type='submit'>Sign in</Button>
           </div>
-      <p className='mt-6 font-light '>don't have an account  <span className='text-blue-800 font-semibold'><Link href='signup'>Sign UP</Link></span> </p>
+      <p className='mt-6 font-light '>Don't have an account  <span className='text-gray-900 font-bold'><Link href='signup'>Sign UP</Link></span> </p>
 
     </form>
     <Toaster />

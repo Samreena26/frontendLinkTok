@@ -5,6 +5,7 @@ import { useGetusersearchQuery, useSendRequestMutation, useUnfollowMutation ,use
 import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 import Loader from '@/components/ui/Loader';
+import Navbar from '@/components/ui/Navbar';
 
 export default function Page() {
   const { toast } = useToast();
@@ -88,40 +89,43 @@ export default function Page() {
 
   return (
     <>
-    <div className="bg-gray-100 min-h-screen">
-      <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
+    </div>
+    <div className="bg-gray-300 h-screen grid grid-cols-7">
+      <Navbar/>
         {/* Left column for search and user cards */}
-        <div className="col-span-1 md:col-span-2 space-y-4">
+        <div className=" h-screen min-w-max grid grid-cols-5">
+        <div className="col-span-1 md:col-span-2 space-y-4 w-min ml-10 mt-10">
           {/* Search bar */}
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search users..."
-            className="w-full md:w-3/4 p-3 border rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-96 p-4 mx-2 my-5 border rounded-2xl shadow-md placeholder:text-black focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-400"
           />
           {/* User cards */}
-         <div>
-          
           {data?.search.map((result) => (
-            <div key={result.id} className="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
+            <div key={result.id} className=" p-4 rounded-2xl shadow-md flex items-center w-96 mx-4 bg-gray-400">
               <img src={result.profilePictureUrl} alt={result.username} className="h-16 w-16 rounded-full" />
               <div className="flex-grow">
-                <h3 className="text-lg font-semibold">{result.username}</h3>
-                <p className="text-sm text-gray-600">Bio goes here...</p>
+                <h3 className="text-lg font-semibold ml-3">{result.username}</h3>
+                <p className="text-sm ml-3 text-black">Bio goes here...</p>
               </div>
               {/* Follow/Unfollow button */}
               {followStatus[result.id] ? (
                 <button
                   onClick={() => handleUnfollowClick(result.id)}
-                  className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-700 transition duration-300"
+                  className="px-4 py-2 rounded-2xl bg-gray-800 text-white hover:bg-orange-700 transition duration-300"
                 >
                   Following
                 </button>
               ) : (
                 <button
                   onClick={() => handleFollowClick(result.id)}
-                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition duration-300"
+                  className="px-4 py-2 rounded bg-gray-800 hover:bg-blue-700 transition duration-300 text-white"
                 >
                   Follow
                 </button>
@@ -129,16 +133,14 @@ export default function Page() {
             </div>
           ))}
         </div>
-        </div>
         {/* Right column for following data */}
-        <div className="col-span-1 md:col-span-1 space-y-4">
+        <div className=" grid grid-cols-2 col-span-3 mt-12 ml-12">
           {/* Following list */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-4">Following</h3>
-            {followingsloading && <Loader/>}
+          <div className=" p-4 rounded-2xl shadow-md w-60 h-min bg-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-center">Following</h3>
             {followingData?.following.map((result) => (
-              <div key={result.target_id} className="flex items-center space-x-4">
-                <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full" />
+              <div key={result.target_id} className="flex items-center space-x-4 bg-gray-300 rounded-xl mb-4">
+                <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full ml-2 my-2" />
                 <div>
                   <h3 className="text-lg font-semibold">{result.username}</h3>
                 </div>
@@ -146,12 +148,11 @@ export default function Page() {
             ))}
           </div>
           {/* Followers list */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-4">Followers</h3>
-            {followersloading && <Loader/>}
+          <div className="p-4 rounded-2xl shadow-md w-60 h-min bg-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-center">Followers</h3>
             {followData?.followers.map((result) => (
-              <div key={result.user_id} className="flex items-center space-x-4">
-                <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full" />
+              <div key={result.user_id} className="flex items-center space-x-4 bg-gray-300 rounded-xl mb-4">
+                <img src={result.profilePictureURL} alt={result.username} className="h-16 w-16 rounded-full ml-2 my-2" />
                 <div>
                   <h3 className="text-lg font-semibold">{result.username}</h3>
                 </div>
@@ -160,8 +161,8 @@ export default function Page() {
           </div>
         </div>
       </div>
+      </div>
       <Toaster />
-    </div>
   </>
   
   );

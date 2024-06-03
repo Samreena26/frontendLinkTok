@@ -22,6 +22,7 @@ import { Toaster } from "@/ui/toaster";
 import { useToast } from "@/ui/use-toast";
 import { useRouter } from 'next/navigation';
 import Loader from "@/ui/Loader";
+import Navbar from "@/components/ui/Navbar";
 
 interface updatedetailsResponse {
   message: string;
@@ -117,29 +118,36 @@ refetchViews();
   if (isError) return <div>Error occurred</div>;
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-    <div className="flex justify-end p-4">
-    <Button   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
-    onClick={handlesignout}>
-      Sign Out
-    </Button>
+  <>
+  <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
   </div>
+    <div className="bg-gray-300 h-min grid grid-cols-7">
+      <Navbar/>
+      
+      {/* div contain two more divs */}
+      <div className="grid h-min min-w-max grid-cols-2">
+      {/* 1st div contain profile pic, name, bio and edit profile  */}
+     <div className="w-44 mt-32 ml-32">
       {data && (
-        <div className="flex flex-col items-center pt-8">
+        <div className="flex flex-col items-center mt-32 w-44">
           <img className="h-24 w-24 rounded-full" src={data.profilePictureURL} alt="Profile" />
           <h1 className="mt-4 text-3xl font-bold">{data.username}</h1>
           <p className="text-sm text-gray-600">{data.userBio || 'bio not available'}</p>
         </div>
       )}
 
-      <Dialog>
+<Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">Edit Profile</Button>
+          <div className="flex flex-col items-center mt-4">
+          <Button variant="outline" className="bg-gray-400 hover:bg-gray 500">Edit Profile</Button>
+          </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[625px]">
+        <DialogContent className="sm:max-w-[625px] bg-gray-300 border-gray-300">
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-black">
               Make changes to your profile here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
@@ -149,7 +157,7 @@ refetchViews();
                 <Label htmlFor="bio" className="text-right">
                   Bio
                 </Label>
-                <Input type="text" id="bio" value={formData.bio} onChange={handleBioChange} className="w-60 p-2 border rounded" />
+                <Input type="text" id="bio" placeholder="Edit Bio...." value={formData.bio} onChange={handleBioChange} className="w-60 p-2 border rounded placeholder:text-black" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="media" className="text-right">
@@ -159,37 +167,52 @@ refetchViews();
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" className="bg-gray-800">Save changes</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
+      </div>
 
       {/* Analytics Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-8">
+      {/* 2nd div contain logout button and analytics section */}
+      <div className="-ml-32 mt-4">
+      <div className="flex justify-end p-4">
+    <Button   className="bg-gray-800 hover:bg-gray-500 text-white font-bold py-5 px-4 rounded-lg" 
+    onClick={handlesignout}>
+      Log Out
+    </Button>
+  </div>
+      <div className="h-8 w-44 mt-8 mb-16">
+      <h1 className="text-center pl-64 text-3xl text-black font-bold">Analytics</h1>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-min">
         {/* Replace with actual data */}
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-gray-400 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Likes</h2>
           <p className="text-3xl">{allLikes?.totalLikes}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-gray-400 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Comments</h2>
           <p className="text-3xl">{allComments?.totalComments}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-gray-400 p-4 rounded-lg shadow w-80">
           <h2 className="text-lg font-semibold">Shares</h2>
           <p className="text-3xl">{allShares?.totalShares}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-gray-400 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">impressions</h2>
           <p className="text-3xl">{allImpressions?.totalImpressions}</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-gray-400 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold">Views</h2>
           <p className="text-3xl">{allViews?.totalViews}</p>
         </div>
+        </div>
+      </div>
       </div>
       <Toaster />
     </div>
+    </>
   );
 }

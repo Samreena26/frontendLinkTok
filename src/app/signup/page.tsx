@@ -90,30 +90,30 @@ setTimeout(() => {
 }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-200 via-pink-300 to-blue-500">
-      <div className="w-full max-w-xs">
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="flex  bg-[url('/signup.png')] bg-cover h-screen  w-screen">
+      <div className="w-full max-w-xs mt-20 ml-72">
+        <form onSubmit={handleSubmit} className="bg-gray-600 text-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <Label htmlFor="username">username</Label>
-            <Input placeholder="username" name="username" value={form.username} onChange={handleChange}  />
+            <Input placeholder="username" name="username" className='mt-2 text-black bg-gray-300' value={form.username} onChange={handleChange}  />
           </div>
           
           <div className="mb-4">
-            <Label htmlFor="email">email</Label>
-            <Input  placeholder="email" name="email" value={form.email} onChange={handleChange}  />
+            <Label htmlFor="email">Email</Label>
+            <Input  placeholder="example@gmail.com" name="email" className='mt-2 text-black bg-gray-300' value={form.email} onChange={handleChange}  />
           </div>
           <div className="mb-6">
             <Label htmlFor="password">Password</Label>
-            <Input  type="password" placeholder="****************" name="password" value={form.password} onChange={handleChange}  />
+            <Input  type="password" placeholder="****************" name="password" className='mt-2 text-black bg-gray-300' value={form.password} onChange={handleChange}  />
           </div>
           <div className="mb-6">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input  type="password" placeholder="****************" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} />
+            <Input  type="password" placeholder="****************" name="confirmPassword"  className='mt-2 text-black bg-gray-300' value={form.confirmPassword} onChange={handleChange} />
           </div>
           <div className="flex items-center justify-between">
             <Button type='submit' >Sign Up</Button>
           </div>
-          <p className='mt-6 font-light '>alredy have an account  <span className='text-blue-800 font-semibold'><Link href='signin'>Sign In</Link></span> </p>
+          <p className='mt-6 font-light '>Already have an account  <span className='text-gray-900 font-bold'><Link href='signin'>Sign In</Link></span> </p>
         </form>
         <Toaster />
       </div>

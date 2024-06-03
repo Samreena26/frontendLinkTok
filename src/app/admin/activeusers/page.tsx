@@ -2,6 +2,7 @@
 
 import Loader from '@/ui/Loader';
 import { useGetActiveUsersQuery } from '@/lib/linkTokApi';
+import Navbar from '@/components/ui/Navbar';
 
 export default function page() {
   const { data: activeUsersData, isLoading, error } = useGetActiveUsersQuery();
@@ -10,8 +11,15 @@ export default function page() {
   if (error) return <div>Error fetching active users.</div>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Active Users</h1>
+    <>
+    <div className="bg-gray-800 h-12 ml-54 flex items-center">
+      <h1 className="text-gray-300 ml-96 tracking-widest text-xl"> API WEB BASED SOCIAL MEDIA PLATFORM LINKTOK</h1>
+      <h1 className="text-gray-600 ml-44"> Design by Samreena Haseeb </h1>
+  </div>
+    <div className="bg-pink-300 grid grid-cols-6 h-min">
+      <Navbar/>
+      <div className="h-min min-w-max mt-2 mb-6">
+      <h1 className="text-2xl font-bold ml-8">Active Users</h1>
       {activeUsersData && activeUsersData.activeUsers.length > 0 ? (
         <ul>
           {activeUsersData.activeUsers.map((user) => (
@@ -35,6 +43,8 @@ export default function page() {
       ) : (
         <div>No active users found.</div>
       )}
+      </div>
     </div>
+    </>
   );
 }
